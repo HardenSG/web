@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:mysql://82.157.48.184:3306/weibo?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&serverTimezone=GMT%2B8
+    username: weibo
+    password: "a2dDDMNe5ZTdkddm"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:**/mapper/xml/*.xml
+server:
+  port: 8080
