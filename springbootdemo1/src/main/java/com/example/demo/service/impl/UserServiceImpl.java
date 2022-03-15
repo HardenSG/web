@@ -4,6 +4,7 @@ import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +17,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-
+    @Autowired
+    private UserMapper usermapper;
+    @Override
+    public boolean userRepeat(String email) {
+        System.out.println("----------"+usermapper.checkUser(email));
+        if(usermapper.checkUser(email)==null){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }
