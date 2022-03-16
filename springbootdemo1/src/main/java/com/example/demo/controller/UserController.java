@@ -11,7 +11,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -36,22 +38,28 @@ public class UserController {
     String text = "";
     @PostMapping("regist")
     @ResponseBody
-    public String regist(@RequestParam("name") String name,
-                         @RequestParam("password") String password,
-                         @RequestParam("email")String email,
-                         @RequestParam("code")String code)
+    public Map regist(@RequestParam("name") String name,
+                      @RequestParam("password") String password,
+                      @RequestParam("email")String email,
+                      @RequestParam("code")String code )
     {
-        if(text.equals(code)&&userService.userRepeat(email)==true){
-            usermapper.savaUser(name,password,email);
-            return "success";
-        }else {
-            return "fail";
+        HashMap param = new HashMap<>();
+        if (!text.equals(code)) {
+            param.put("status", 0);
+            param.put("msg", "验证码不正确");
+        } else if (text.equals(code)&&userService.userRepeat(email)==true){
+            usermapper.savaUser(name, password, email);
+            param.put("status", 200);
+            param.put("msg","注册成功");
+        }else{
+            param.put("msg","注册失败" );
         }
-
+        return param;
     }
     @PostMapping("/capture")
-    public void Captcha(String email){
-
+    public Map Captcha(String email){
+        HashMap captcha = new HashMap<>();
+        if(userService.userRepeat(email) == true){
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         //邮件设置
         simpleMailMessage.setSubject("验证码");
@@ -61,6 +69,10 @@ public class UserController {
         simpleMailMessage.setTo(email);
         simpleMailMessage.setFrom("rena2928992879@163.com");
         mailSender.send(simpleMailMessage);
+        }else{
+            captcha.put("msg","邮箱重复");
+        }
+        return captcha;
     }
 
 

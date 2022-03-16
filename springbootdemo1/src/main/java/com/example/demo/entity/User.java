@@ -32,7 +32,7 @@ import lombok.EqualsAndHashCode;
 
     private String password;
 
-    private String avatarAddress;
+    private String head_picture;
 
 
 }
