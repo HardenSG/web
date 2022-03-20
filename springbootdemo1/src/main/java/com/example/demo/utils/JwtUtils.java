@@ -13,26 +13,28 @@ import java.util.UUID;
 public class JwtUtils {
 
     private static String signature = "admin";
-    private static long time = 1000*60*60*24;
-    public static String jwt(){
+    private static long time = 1000 * 60 * 60 * 24;
+
+    public static String jwt() {
         JwtBuilder jwtBuilder = Jwts.builder();
         String jwtToken = jwtBuilder
-                .setHeaderParam("typ","JWT")
-                .setHeaderParam("alg","HS256")
+                .setHeaderParam("typ", "JWT")
+                .setHeaderParam("alg", "HS256")
                 //payload
-                .claim("username","")
-                .claim("role","")
+                .claim("username", "")
+                .claim("role", "")
                 //主题
                 .setSubject("")
                 //有效时间
-                .setExpiration(new Date(System.currentTimeMillis()+time))
+                .setExpiration(new Date(System.currentTimeMillis() + time))
                 .setId(UUID.randomUUID().toString())
                 //签名
-                .signWith(SignatureAlgorithm.HS256,signature)
+                .signWith(SignatureAlgorithm.HS256, signature)
                 .compact();
         return jwtToken;
     }
-    public void parse(String token){
+
+    public void parse(String token) {
         JwtParser jwtParser = Jwts.parser();
         Jws<Claims> claimsJws = jwtParser.setSigningKey(signature).parseClaimsJws(token);
         Claims body = claimsJws.getBody();
@@ -40,4 +42,15 @@ public class JwtUtils {
         body.get("role");
 
     }
+    public static String parseEmail(String token){
+        JwtParser jwtParser = Jwts.parser();
+        Jws<Claims> claimsJws = jwtParser.setSigningKey(signature).parseClaimsJws(token);
+        Claims body = claimsJws.getBody();
+        String email = (String)body.get("email");
+        body.get("password");
+        return email;
+
+    }
+
 }
+

@@ -5,16 +5,19 @@ import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserService;
 import com.example.demo.service.impl.UserServiceImpl;
+import com.example.demo.utils.UploadUtils;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -28,16 +31,18 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RestController
 @RequestMapping("user")
+@ResponseBody
 public class UserController {
     @Autowired
     private UserMapper usermapper;
     @Autowired
     private UserService userService;
+
     @Autowired
     JavaMailSenderImpl mailSender;
     String text = "";
     @PostMapping("regist")
-    @ResponseBody
+
     public Map regist(@RequestParam("name") String name,
                       @RequestParam("password") String password,
                       @RequestParam("email")String email,
@@ -56,7 +61,7 @@ public class UserController {
         }
         return param;
     }
-    @PostMapping("/capture")
+    @PostMapping("capture")
     public Map Captcha(String email){
         HashMap captcha = new HashMap<>();
         if(userService.userRepeat(email) == true){
@@ -74,6 +79,26 @@ public class UserController {
         }
         return captcha;
     }
+   //返回加工过的url
+    @PostMapping("url")
+    public String url(MultipartFile photo, HttpSession session) throws IOException {
+       return UploadUtils.upload(photo,session);
+    }
+    //个人资料的修改
+    @PutMapping("updateData")
+    public Map updateData(User user, HttpServletRequest request,@RequestParam("email") String email) {
+       return userService.changeBy(user,request);
+    }
+    //个人资料的展示
+    @GetMapping("showData")
+    public  Map showData(HttpServletRequest request){
+        return userService.selectBy(request);
+
+    }
+
+
+
+
 
 
 }
