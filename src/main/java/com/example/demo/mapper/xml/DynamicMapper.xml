@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.DynamicMapper">
+<insert id="insertDynamic">
+    INSERT INTO `dynamic` (`email`,`content`,`picture`,`date`) VALUES(#{email},#{content},#{picture},#{date})
+</insert>
+    <insert id="insertDynamic1" useGeneratedKeys="true" keyProperty="dId" keyColumn="d_id">
+    INSERT INTO `dynamic` (`email`,`content`,`picture`,`date`) VALUES(#{email},#{content},#{picture},#{date})
+</insert>
+    <select id="queryForOne" resultType="com.example.demo.entity.Dynamic">
+        select from `dynamic` where d_id = #{dId}
+    </select>
+</mapper>
