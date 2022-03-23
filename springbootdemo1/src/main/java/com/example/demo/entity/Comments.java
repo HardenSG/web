@@ -1,0 +1,48 @@
+package com.example.demo.entity;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import java.io.Serializable;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * <p>
+ * 
+ * </p>
+ *
+ * @author Chu
+ * @since 2022-03-19
+ */
+@Data
+  @EqualsAndHashCode(callSuper = false)
+    public class Comments implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private Integer dId;
+
+    private String email;
+
+    private String comment;
+
+    @TableField(exist=false)
+    private String name;
+
+    @TableField(exist=false)
+    private String headPhoto;
+
+      @TableId(value = "comment_id", type = IdType.AUTO)
+      private Integer commentId;
+
+
+
+    public Comments(){ }
+
+  public Comments(Integer dId, String email, String comment) {
+    this.dId = dId;
+    this.email = email;
+    this.comment = comment;
+  }
+}
