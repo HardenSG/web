@@ -10,6 +10,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Date;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * <p>
@@ -32,10 +37,15 @@ import javax.persistence.Id;
     private String name;
 
     private String email;
-    private LocalDate birthday;
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date birthday;
     private String password;
     private String headPicture;
-
+    private String sex;
+    private String introduction;
+    private String schoolName;
+    private String schoolState;
+    private  String schoolTime;
     private String token;
 
 

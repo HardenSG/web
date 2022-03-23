@@ -275,5 +275,12 @@ public class DynamicController {
         param.put("msg","评论显示成功");
         return param;
     }
+
+    //删除动态
+    @DeleteMapping("dynamic/delete")
+    public Map deleteDynamic(HttpServletRequest request, Integer did, String email){
+        return dynamicService.deleteDynamic(request,did,email);
+
+    }
 }
 

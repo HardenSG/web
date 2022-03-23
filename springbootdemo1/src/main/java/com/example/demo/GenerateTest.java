@@ -30,7 +30,7 @@ public class GenerateTest {
         //全局配置
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.setOutputDir(System.getProperty("user.dir")+"/src/main/java");
-        globalConfig.setAuthor("no");
+        globalConfig.setAuthor("admin");
         globalConfig.setOpen(false);
         globalConfig.setServiceName("%sService");
         autoGenerator.setGlobalConfig(globalConfig);
@@ -47,6 +47,7 @@ public class GenerateTest {
         StrategyConfig strategyConfig = new StrategyConfig();
         strategyConfig.setInclude("topic");
 
+        strategyConfig.setInclude("dynamic");
         strategyConfig.setNaming(NamingStrategy.underline_to_camel);
         strategyConfig.setColumnNaming(NamingStrategy.underline_to_camel);
         strategyConfig.setEntityLombokModel(true);

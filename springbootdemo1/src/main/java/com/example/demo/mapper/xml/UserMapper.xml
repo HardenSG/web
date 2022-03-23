@@ -8,4 +8,7 @@
 <select id="getUserByEmail" resultType="com.example.demo.entity.User">
     select * from user where email = #{email}
 </select>
+<!--    <insert id="saveUser" >-->
+<!--        insert into user(name,password) VALUES(#{name},#{password})-->
+<!--    </insert>-->
 </mapper>

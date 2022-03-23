@@ -1,8 +1,9 @@
-package com.example.demo.service;
 
+package com.example.demo.service;
 import com.example.demo.entity.Dynamic;
 import com.baomidou.mybatisplus.extension.service.IService;
-
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 import java.sql.Date;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  *  服务类
  * </p>
  *
- * @author Chu
+ * @author admin
  * @since 2022-03-15
  */
 public interface DynamicService extends IService<Dynamic> {
@@ -22,4 +23,13 @@ public interface DynamicService extends IService<Dynamic> {
     int insertDynamic(Dynamic dynamic);
     List pageList(int pageNumber);
     List getDynamicByTopic(int tId);
+    public Map deleteDynamic(HttpServletRequest request,Integer did,String email);
+
 }
+
+
+
+
+
+
+
