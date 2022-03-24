@@ -57,7 +57,7 @@ public class DynamicController {
      * @return
      */
     @GetMapping("/dynamic")
-    public Map insertDynamic(HttpSession session,HttpServletRequest  request,
+    public Map insertDynamic(HttpSession session,HttpServletRequest request,
                              @RequestParam(value = "message") String message,
                              @RequestParam(value = "picture",required = false) MultipartFile picture,
                              @RequestParam(value = "topic",required = false)String topic) {
