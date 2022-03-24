@@ -280,7 +280,6 @@ public class DynamicController {
     @DeleteMapping("dynamic/delete")
     public Map deleteDynamic(HttpServletRequest request, Integer did, String email){
         return dynamicService.deleteDynamic(request,did,email);
-
     }
 }
 
