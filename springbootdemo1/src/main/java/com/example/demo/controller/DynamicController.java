@@ -45,6 +45,8 @@ public class DynamicController {
     CommentsService commentsService;
     @Autowired
     TopicService topicService;
+    @Autowired
+    FollowService followService;
 
 
 
@@ -266,6 +268,12 @@ public class DynamicController {
         map.put("message","成功");
         return map;
     }
+
+    /**
+     * 所有评论
+     * @param dId
+     * @return
+     */
     @GetMapping ("/dynamic/comment")
     public Map getComments(@RequestParam("dId") int dId){
         Map param = new HashMap();
@@ -281,5 +289,56 @@ public class DynamicController {
     public Map deleteDynamic(HttpServletRequest request, Integer did, String email){
         return dynamicService.deleteDynamic(request,did,email);
     }
+
+    /**
+     *关注人的动态
+     * @param request
+     * @return
+     */
+    @GetMapping("/dynamic/follow")
+    public Map followDynamic(HttpServletRequest request,@RequestParam("pageNumber")int pageNumber){
+        Map map = new HashMap();
+        //得到用户email
+        String userEmail = JwtUtils.parseEmail( request.getHeader("token"));
+        //得到关注表对象
+        List<Follow> follows = followService.getFollowByUserEmail(userEmail);
+        //查找动态
+        List<Dynamic> list = dynamicService.getDynamicByFollow(follows,pageNumber);
+        int i =0;
+        for (Dynamic dynamic : list) {
+            Map param = new HashMap();
+            i++;
+            //拿到动态的话题
+            String topic = topicService.getTopic(dynamic.getTId());
+            //拿到发动态的人的email
+            String email = dynamic.getEmail();
+            //拿到发此条动态的user
+            User userByEmail = userService.getUserByEmail(email);
+            //拿到至多5条评论
+            List<Comments> comments = commentsService.getCommentsIncludeName(commentsService.selectCommentsByDidLimit(dynamic.getDId(),0,5));
+            //原创
+            if (dynamic.getOriginalId()==0){
+                //type:0 说明是原创
+                param.put("dynamicType","0");
+                //删除
+            }else if (dynamic.getOriginalId()==-2){
+                param.put("dynamicType","-2");
+                //转发
+            }else {
+                param.put("dynamicType","1");
+                User originalUser = userService.getUserByEmail(dynamicService.getDynamic(dynamic.getOriginalId()).getEmail());
+                param.put("originalUser",originalUser);
+            }
+            param.put("dynamic",dynamic);
+            param.put("user",userByEmail);
+            param.put("comments",comments);
+            param.put("topic",topic);
+            map.put("info"+i,param);
+        }
+        map.put("status",200);
+        map.put("message","成功");
+        return map;
+    }
+
 }
 

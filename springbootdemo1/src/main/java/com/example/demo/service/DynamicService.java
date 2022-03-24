@@ -1,5 +1,5 @@
-
 package com.example.demo.service;
+
 import com.example.demo.entity.Dynamic;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.demo.entity.Follow;
@@ -26,7 +26,7 @@ public interface DynamicService extends IService<Dynamic> {
     List pageList(int pageNumber);
     List getDynamicByTopic(int tId);
     Map deleteDynamic(HttpServletRequest request,Integer did,String email);
-    Dynamic getDynamicByFollow(List<Follow> follows);
+    List getDynamicByFollow(List<Follow> follows,Integer pageNumber);
 
 }
 
