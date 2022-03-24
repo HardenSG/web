@@ -45,6 +45,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
+@ResponseBody
 public class UserController {
     @Autowired
     private UserService userService = new UserServiceImpl();
@@ -77,7 +78,7 @@ public class UserController {
     }
 
 
-    @PostMapping("regist")
+    @PostMapping("/user/regist")
 
     public Map regist(@RequestParam("name") String name,
                       @RequestParam("password") String password,
@@ -97,7 +98,7 @@ public class UserController {
         return param;
     }
 
-    @PostMapping("capture")
+    @PostMapping("/user/capture")
     public Map Captcha(String email) {
         HashMap captcha = new HashMap<>();
         if (userService.userRepeat(email) == true) {
@@ -117,19 +118,19 @@ public class UserController {
     }
 
     //返回加工过的url
-    @PostMapping("url")
+    @PostMapping("/user/url")
     public String url(MultipartFile photo, HttpSession session) throws IOException {
         return UploadUtils.upload(photo, session);
     }
 
     //个人资料的修改
-    @PutMapping("updateData")
-    public Map updateData(User user, HttpServletRequest request, @RequestParam("email") String email) {
+    @PutMapping("/user/updateData")
+    public Map updateData(User user, HttpServletRequest request) {
         return userService.changeBy(user, request);
     }
 
     //个人资料的展示
-    @GetMapping("showData")
+    @GetMapping("/user/showData")
     public Map showData(HttpServletRequest request) {
         return userService.selectBy(request);
 
