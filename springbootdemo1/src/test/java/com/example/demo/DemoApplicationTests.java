@@ -10,10 +10,7 @@ class DemoApplicationTests {
 
     @Test
     void contextLoads() {
-@Autowired
-        @Test
-    void contextLoads() {
+
 
     }
-
 }

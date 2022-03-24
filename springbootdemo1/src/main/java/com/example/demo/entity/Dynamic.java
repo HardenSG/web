@@ -22,18 +22,20 @@ import lombok.EqualsAndHashCode;
  * @since 2022-03-15
  */
 @TableName(value = "dynamic")
-  @Data
   @EqualsAndHashCode(callSuper = false)
-    public class Dynamic implements Serializable {
-
-    private static final long serialVersionUID=1L;
+@Data
+    public class Dynamic  {
 
 
     private String content;
 
     private String picture;
 
-    private Integer likes = 0;
+  public void setLikes(Integer likes) {
+    this.likes = likes;
+  }
+
+  private Integer likes = 0;
 
     private Date date;
 
