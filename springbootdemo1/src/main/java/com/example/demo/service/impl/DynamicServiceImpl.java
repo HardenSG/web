@@ -117,16 +117,23 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
         return param;
     }
 
+
+
+
+
+
     @Override
-    public Dynamic getDynamicByFollow(List<Follow> follows) {
-        Page<Dynamic> page = new Page<>();
-        QueryWrapper<Dynamic> queryWrapper = new QueryWrapper<>();
-        for (Follow follow:follows) {
+    public List getDynamicByFollow(List<Follow> follows , Integer pageNumber) {
+        Page<Dynamic> page = new Page<>(pageNumber,5);
+        QueryWrapper<Dynamic> queryWrapper= new QueryWrapper<>();
+        queryWrapper.orderByDesc("date");
+        for (Follow follow : follows) {
             queryWrapper.eq("email",follow.getFollowedEmail());
         }
-
+        Page<Dynamic> dynamicPage = dynamicMapper.selectPage(page, queryWrapper);
+        List<Dynamic> records = dynamicPage.getRecords();
+        return records;
     }
-
 
 //    // 根据条件更新
 //    public void changeBy(User user, String column, Object val) {
