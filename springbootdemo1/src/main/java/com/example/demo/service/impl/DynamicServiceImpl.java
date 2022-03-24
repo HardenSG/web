@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.entity.Dynamic;
+import com.example.demo.entity.Follow;
 import com.example.demo.mapper.DynamicMapper;
 import com.example.demo.service.DynamicService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -115,6 +116,16 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
             dynamicMapper.update(dynamic,updateWrapper);
         }
         return param;
+    }
+
+    @Override
+    public Dynamic getDynamicByFollow(List<Follow> follows) {
+        Page<Dynamic> page = new Page<>();
+        QueryWrapper<Dynamic> queryWrapper = new QueryWrapper<>();
+        for (Follow follow:follows) {
+            queryWrapper.eq("email",follow.getFollowedEmail());
+        }
+
     }
 
 
