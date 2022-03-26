@@ -193,14 +193,14 @@ public class DynamicController {
      * @return
      */
     @PostMapping("/dynamic/comment")
-    public Map comment(@RequestParam("comment") String comment , @RequestParam("dId") int dId , @RequestParam("commentCount") int commentCount, HttpServletRequest request){
+    public Map comment(@RequestParam("comment") String comment , @RequestParam("dId") int dId , @RequestParam("commentCount") int commentCount, HttpServletRequest request) {
 
         Map param = new HashMap();
         //获得email
         String email = JwtUtils.parseEmail(request.getHeader("token"));
         //添加信息到comments表
-        Comments comments = new Comments(dId,email,comment);
-        int i = commentsService.insertComment(comments);
+          Comments comments = new Comments(dId,email,comment);
+          int i = commentsService.insertComment(comments);
         //获得点赞用户的信息
         User userByEmail = userService.getUserByEmail(email);
         if(i!=0){
@@ -215,7 +215,7 @@ public class DynamicController {
             param.put("status","0");
             param.put("msg","评论失败");
         }
-        return param;
+      return param;
     }
 
     /**
@@ -281,6 +281,18 @@ public class DynamicController {
     public Map deleteDynamic(HttpServletRequest request, Integer did, String email){
         return dynamicService.deleteDynamic(request,did,email);
 
+    }
+
+    //评论通知
+    @GetMapping("/dynamic/commentNotice")
+    public Map commentNotice(HttpServletRequest request){
+        return dynamicService.commentNotice(request);
+    }
+
+    //点赞通知
+    @GetMapping("/dynamic/likeNotice")
+    public Map likeNotice(HttpServletRequest request){
+        return dynamicService.likeNotice(request);
     }
 }
 

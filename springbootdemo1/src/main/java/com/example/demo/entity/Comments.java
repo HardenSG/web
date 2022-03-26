@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * <p>
@@ -15,7 +18,7 @@ import lombok.EqualsAndHashCode;
  * @author Chu
  * @since 2022-03-19
  */
-@Data
+   @Data
   @EqualsAndHashCode(callSuper = false)
     public class Comments implements Serializable {
 
@@ -36,7 +39,8 @@ import lombok.EqualsAndHashCode;
       @TableId(value = "comment_id", type = IdType.AUTO)
       private Integer commentId;
 
-
+      private Date commentDate;
+      private int commentRead;
 
     public Comments(){ }
 
@@ -45,4 +49,6 @@ import lombok.EqualsAndHashCode;
     this.email = email;
     this.comment = comment;
   }
+
+
 }
