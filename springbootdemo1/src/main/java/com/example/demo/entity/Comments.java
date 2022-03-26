@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -33,6 +35,8 @@ import lombok.EqualsAndHashCode;
     @TableField(exist=false)
     private String headPhoto;
 
+    private Date commentDate;
+
       @TableId(value = "comment_id", type = IdType.AUTO)
       private Integer commentId;
 
@@ -40,9 +44,10 @@ import lombok.EqualsAndHashCode;
 
     public Comments(){ }
 
-  public Comments(Integer dId, String email, String comment) {
+  public Comments(Integer dId, String email, String comment , Date commentDate) {
     this.dId = dId;
     this.email = email;
     this.comment = comment;
+    this.commentDate = commentDate;
   }
 }

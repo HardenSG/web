@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -30,11 +31,14 @@ import lombok.EqualsAndHashCode;
 
     private String email;
 
+    Date likeDate;
+
   public Like() {
   }
 
-  public Like(Integer dId, String email) {
+  public Like(Integer dId, String email , Date likeDate) {
     this.dId = dId;
     this.email = email;
+    this.likeDate = likeDate;
   }
 }

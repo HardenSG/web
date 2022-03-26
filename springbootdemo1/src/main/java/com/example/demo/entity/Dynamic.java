@@ -2,7 +2,7 @@ package com.example.demo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDateTime;
-import java.sql.Date;
+import java.util.Date;
 import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -42,9 +42,9 @@ import lombok.EqualsAndHashCode;
       @TableId(value = "d_id", type = IdType.AUTO)
       private Integer dId;
 
-    private String email;
+  private String email;
 
-    private Integer forwardCount = 0;
+  private Integer forwardCount = 0;
 
     private Integer commentCount = 0;
 
