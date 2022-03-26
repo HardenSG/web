@@ -1,25 +1,15 @@
 package com.example.demo.controller;
-
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.entity.*;
 import com.example.demo.service.*;
 import com.example.demo.utils.JwtUtils;
 import com.example.demo.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Date;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,7 +123,7 @@ public class DynamicController {
             //更新点赞数
             like = like + 1;
             byId.setLikes(like);
-            Like like1 = new Like(dId,email);
+            Like like1 = new Like(dId,email,new Date(System.currentTimeMillis()));
             //数据库更新
             int count = dynamicService.updateByColumn("likes", like, dId);
             int i = likeService.insertLike(like1);
@@ -200,14 +190,17 @@ public class DynamicController {
         Map param = new HashMap();
         //获得email
         String email = JwtUtils.parseEmail(request.getHeader("token"));
+        //获得现在时间
+        Date date = new Date(System.currentTimeMillis());
         //添加信息到comments表
-        Comments comments = new Comments(dId,email,comment);
+        Comments comments = new Comments(dId,email,comment,date);
         int i = commentsService.insertComment(comments);
         //获得点赞用户的信息
         User userByEmail = userService.getUserByEmail(email);
         if(i!=0){
             commentCount = commentCount+1;
             int count = dynamicService.updateByColumn("comment_count", commentCount , dId);
+            param.put("date",date);
             param.put("user",userByEmail);
             param.put("dId",dId);
             param.put("commentCount",commentCount);
