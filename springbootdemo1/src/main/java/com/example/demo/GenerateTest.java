@@ -45,9 +45,7 @@ public class GenerateTest {
         autoGenerator.setPackageInfo(packageConfig);
         //策略配置
         StrategyConfig strategyConfig = new StrategyConfig();
-        strategyConfig.setInclude("topic");
-
-        strategyConfig.setInclude("dynamic");
+        strategyConfig.setInclude("follow");
         strategyConfig.setNaming(NamingStrategy.underline_to_camel);
         strategyConfig.setColumnNaming(NamingStrategy.underline_to_camel);
         strategyConfig.setEntityLombokModel(true);

@@ -58,7 +58,11 @@ public class UserController {
     String text = "";
 
     @PostMapping ("/user")
-    public Map login(User user, HttpSession session, Model model){
+    //public Map login(@RequestParam("email") String email,@RequestParam("password") String password){
+    public Map login(User user){
+//        User user = new User();
+//        user.setEmail(email);
+//        user.setPassword(password);
         Map param = new HashMap<>();
         User userByEmail = this.userService.getUserByEmailAndPassword(user.getEmail(),user.getPassword());
         if(userByEmail==null){

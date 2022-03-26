@@ -1,25 +1,15 @@
 package com.example.demo.controller;
-
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.entity.*;
 import com.example.demo.service.*;
 import com.example.demo.utils.JwtUtils;
 import com.example.demo.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Date;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +35,8 @@ public class DynamicController {
     CommentsService commentsService;
     @Autowired
     TopicService topicService;
+    @Autowired
+    FollowService followService;
 
 
 
@@ -57,7 +49,7 @@ public class DynamicController {
      * @return
      */
     @GetMapping("/dynamic")
-    public Map insertDynamic(HttpSession session,HttpServletRequest  request,
+    public Map insertDynamic(HttpSession session,HttpServletRequest request,
                              @RequestParam(value = "message") String message,
                              @RequestParam(value = "picture",required = false) MultipartFile picture,
                              @RequestParam(value = "topic",required = false)String topic) {
@@ -131,7 +123,7 @@ public class DynamicController {
             //更新点赞数
             like = like + 1;
             byId.setLikes(like);
-            Like like1 = new Like(dId,email);
+            Like like1 = new Like(dId,email,new Date(System.currentTimeMillis()));
             //数据库更新
             int count = dynamicService.updateByColumn("likes", like, dId);
             int i = likeService.insertLike(like1);
@@ -198,14 +190,17 @@ public class DynamicController {
         Map param = new HashMap();
         //获得email
         String email = JwtUtils.parseEmail(request.getHeader("token"));
+        //获得现在时间
+        Date date = new Date(System.currentTimeMillis());
         //添加信息到comments表
-        Comments comments = new Comments(dId,email,comment);
+        Comments comments = new Comments(dId,email,comment,date);
         int i = commentsService.insertComment(comments);
         //获得点赞用户的信息
         User userByEmail = userService.getUserByEmail(email);
         if(i!=0){
             commentCount = commentCount+1;
             int count = dynamicService.updateByColumn("comment_count", commentCount , dId);
+            param.put("date",date);
             param.put("user",userByEmail);
             param.put("dId",dId);
             param.put("commentCount",commentCount);
@@ -266,6 +261,12 @@ public class DynamicController {
         map.put("message","成功");
         return map;
     }
+
+    /**
+     * 所有评论
+     * @param dId
+     * @return
+     */
     @GetMapping ("/dynamic/comment")
     public Map getComments(@RequestParam("dId") int dId){
         Map param = new HashMap();
@@ -280,7 +281,57 @@ public class DynamicController {
     @DeleteMapping("dynamic/delete")
     public Map deleteDynamic(HttpServletRequest request, Integer did, String email){
         return dynamicService.deleteDynamic(request,did,email);
-
     }
+
+    /**
+     *关注人的动态
+     * @param request
+     * @return
+     */
+    @GetMapping("/dynamic/follow")
+    public Map followDynamic(HttpServletRequest request,@RequestParam("pageNumber")int pageNumber){
+        Map map = new HashMap();
+        //得到用户email
+        String userEmail = JwtUtils.parseEmail( request.getHeader("token"));
+        //得到关注表对象
+        List<Follow> follows = followService.getFollowByUserEmail(userEmail);
+        //查找动态
+        List<Dynamic> list = dynamicService.getDynamicByFollow(follows,pageNumber);
+        int i =0;
+        for (Dynamic dynamic : list) {
+            Map param = new HashMap();
+            i++;
+            //拿到动态的话题
+            String topic = topicService.getTopic(dynamic.getTId());
+            //拿到发动态的人的email
+            String email = dynamic.getEmail();
+            //拿到发此条动态的user
+            User userByEmail = userService.getUserByEmail(email);
+            //拿到至多5条评论
+            List<Comments> comments = commentsService.getCommentsIncludeName(commentsService.selectCommentsByDidLimit(dynamic.getDId(),0,5));
+            //原创
+            if (dynamic.getOriginalId()==0){
+                //type:0 说明是原创
+                param.put("dynamicType","0");
+                //删除
+            }else if (dynamic.getOriginalId()==-2){
+                param.put("dynamicType","-2");
+                //转发
+            }else {
+                param.put("dynamicType","1");
+                User originalUser = userService.getUserByEmail(dynamicService.getDynamic(dynamic.getOriginalId()).getEmail());
+                param.put("originalUser",originalUser);
+            }
+            param.put("dynamic",dynamic);
+            param.put("user",userByEmail);
+            param.put("comments",comments);
+            param.put("topic",topic);
+            map.put("info"+i,param);
+        }
+        map.put("status",200);
+        map.put("message","成功");
+        return map;
+    }
+
 }
 
