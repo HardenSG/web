@@ -2,6 +2,8 @@ package com.example.demo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDate;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import lombok.Data;
@@ -46,6 +48,7 @@ import org.springframework.format.annotation.DateTimeFormat;
     private String schoolName;
     private String schoolState;
     private  String schoolTime;
+  @TableField(exist=false)
     private String token;
 
 

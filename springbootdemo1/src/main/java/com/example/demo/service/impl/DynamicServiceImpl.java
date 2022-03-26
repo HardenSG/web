@@ -90,7 +90,6 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
         QueryWrapper<Dynamic> dynamicQueryWrapper = new QueryWrapper<>();
         dynamicQueryWrapper.eq("t_id",tId);
         List<Dynamic> dynamics = dynamicMapper.selectList(dynamicQueryWrapper);
-
         return dynamics;
     }
 

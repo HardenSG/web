@@ -10,6 +10,7 @@ import com.example.demo.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -25,9 +26,12 @@ import java.util.Map;
  * @since 2022-03-12
  */
 @Service
+@ResponseBody
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     @Autowired
-    UserMapper userMapper ;
+   private UserMapper usermapper;
+    @Autowired
+    private UserMapper userMapper;
     @Override
     public User getUserByEmailAndPassword(String email,String password) {
 
@@ -38,7 +42,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User getUserByEmail(String email) {
         return userMapper.getUserByEmail(email);
     }
-    private UserMapper usermapper;
+
     //判断注册的email是否重复
     @Override
     public boolean userRepeat(String email){
@@ -49,7 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return false;
         }
     }
-
+    @Override
     //通过email修改name,birthday,introduction,sex,head_picture
     public Map changeBy(User user,HttpServletRequest request) {
         HashMap<Object, Object> param = new HashMap<>();
@@ -68,7 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         return param;
     }
-
+    @Override
     //通过email查询name,birthday,introduction,sex,head_picture
     public  Map selectBy(HttpServletRequest request) {
         HashMap<Object, Object> param = new HashMap<>();
