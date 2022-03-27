@@ -1,0 +1,141 @@
+Index: src/main/java/com/example/demo/controller/DynamicController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo.controller;\r\n\r\n\r\nimport com.example.demo.mapper.DynamicMapper;\r\nimport com.example.demo.mapper.UserMapper;\r\nimport com.example.demo.service.DynamicService;\r\nimport com.example.demo.service.UserService;\r\nimport lombok.extern.slf4j.Slf4j;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.web.bind.annotation.DeleteMapping;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\n\r\nimport org.springframework.stereotype.Controller;\r\nimport org.springframework.web.bind.annotation.ResponseBody;\r\nimport org.springframework.web.bind.annotation.RestController;\r\n\r\nimport javax.servlet.http.HttpServletRequest;\r\nimport java.util.Map;\r\n\r\n/**\r\n * <p>\r\n *  前端控制器\r\n * </p>\r\n *\r\n * @author admin\r\n * @since 2022-03-19\r\n */\r\n@Slf4j\r\n@RestController\r\n@RequestMapping(\"dynamic\")\r\n@ResponseBody\r\npublic class DynamicController{\r\n    @Autowired\r\n    private DynamicMapper dynamicMapper;\r\n    @Autowired\r\n    private DynamicService dynamicService;\r\n    //删除动态\r\n    @DeleteMapping(\"delete\")\r\n    public Map deleteDynamic(HttpServletRequest request, Integer did, String email){\r\n        return dynamicService.deleteDynamic(request,did,email);\r\n\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/demo/controller/DynamicController.java b/src/main/java/com/example/demo/controller/DynamicController.java
+--- a/src/main/java/com/example/demo/controller/DynamicController.java	(revision 471b9a6a34bf589cc4233a6059a819857145594c)
++++ b/src/main/java/com/example/demo/controller/DynamicController.java	(date 1648043184616)
+@@ -38,7 +38,6 @@
+     @DeleteMapping("delete")
+     public Map deleteDynamic(HttpServletRequest request, Integer did, String email){
+         return dynamicService.deleteDynamic(request,did,email);
+-
+     }
+ }
+ 
+Index: src/main/java/com/example/demo/service/DynamicService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo.service;\r\n\r\nimport com.example.demo.entity.Dynamic;\r\nimport com.baomidou.mybatisplus.extension.service.IService;\r\n\r\nimport javax.servlet.http.HttpServletRequest;\r\nimport java.util.Map;\r\n\r\n/**\r\n * <p>\r\n *  服务类\r\n * </p>\r\n *\r\n * @author admin\r\n * @since 2022-03-19\r\n */\r\npublic interface DynamicService extends IService<Dynamic> {\r\n  public Map deleteDynamic(HttpServletRequest request,Integer did,String email);\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/demo/service/DynamicService.java b/src/main/java/com/example/demo/service/DynamicService.java
+--- a/src/main/java/com/example/demo/service/DynamicService.java	(revision 471b9a6a34bf589cc4233a6059a819857145594c)
++++ b/src/main/java/com/example/demo/service/DynamicService.java	(date 1647942618556)
+@@ -16,6 +16,8 @@
+  */
+ public interface DynamicService extends IService<Dynamic> {
+   public Map deleteDynamic(HttpServletRequest request,Integer did,String email);
+-
+-
++  //评论通知
++  public Map commentNotice(HttpServletRequest request);
++  //点赞通知
++  public Map likeNotice(HttpServletRequest request);
+ }
+Index: src/main/java/com/example/demo/service/impl/DynamicServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo.service.impl;\r\nimport com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;\r\nimport com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;\r\nimport com.example.demo.entity.Dynamic;\r\nimport com.example.demo.entity.User;\r\nimport com.example.demo.mapper.DynamicMapper;\r\nimport com.example.demo.service.DynamicService;\r\nimport com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;\r\nimport com.example.demo.utils.JwtUtils;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.stereotype.Service;\r\nimport javax.servlet.http.HttpServletRequest;\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\n/**\r\n * <p>\r\n *  服务实现类\r\n * </p>\r\n *\r\n * @author admin\r\n * @since 2022-03-19\r\n */\r\n@Service\r\npublic class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> implements DynamicService {\r\n    @Autowired\r\n    private DynamicMapper dynamicMapper;\r\n\r\n    @Override\r\n    public Map deleteDynamic(HttpServletRequest request, Integer did, String email) {\r\n        HashMap<Object, Object> param = new HashMap<>();\r\n        //获取email\r\n        String token=request.getHeader(\"token\");\r\n        String emaillog= JwtUtils.parseEmail(token);\r\n        if(email.equals(emaillog)){\r\n            int num=dynamicMapper.delete(new QueryWrapper<Dynamic>().eq(\"d_id\",did));\r\n            if(num>0){\r\n                param.put(\"status\",200);\r\n                param.put(\"msg\",\"删除成功\");\r\n            }else{\r\n                param.put(\"status\",0);\r\n                param.put(\"msg\",\"删除失败\");\r\n            }\r\n            UpdateWrapper<Dynamic> updateWrapper = new UpdateWrapper<>();\r\n            updateWrapper.eq(\"original_id\", did);\r\n            Dynamic dynamic = new Dynamic();\r\n            dynamic.setOriginalId(-2);\r\n            dynamicMapper.update(dynamic,updateWrapper);\r\n        }\r\n        return param;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/demo/service/impl/DynamicServiceImpl.java b/src/main/java/com/example/demo/service/impl/DynamicServiceImpl.java
+--- a/src/main/java/com/example/demo/service/impl/DynamicServiceImpl.java	(revision 471b9a6a34bf589cc4233a6059a819857145594c)
++++ b/src/main/java/com/example/demo/service/impl/DynamicServiceImpl.java	(date 1648042103119)
+@@ -1,16 +1,22 @@
+ package com.example.demo.service.impl;
+ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
++import com.example.demo.entity.Comments;
+ import com.example.demo.entity.Dynamic;
+ import com.example.demo.entity.User;
++import com.example.demo.mapper.CommentsMapper;
+ import com.example.demo.mapper.DynamicMapper;
++import com.example.demo.mapper.UserMapper;
+ import com.example.demo.service.DynamicService;
+ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+ import com.example.demo.utils.JwtUtils;
++import com.sun.org.apache.bcel.internal.generic.NEW;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Service;
+ import javax.servlet.http.HttpServletRequest;
++import java.util.ArrayList;
+ import java.util.HashMap;
++import java.util.List;
+ import java.util.Map;
+ 
+ /**
+@@ -25,7 +31,10 @@
+ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> implements DynamicService {
+     @Autowired
+     private DynamicMapper dynamicMapper;
+-
++@Autowired
++private CommentsMapper commentsMapper;
++@Autowired
++    private  UserMapper userMapper;
+     @Override
+     public Map deleteDynamic(HttpServletRequest request, Integer did, String email) {
+         HashMap<Object, Object> param = new HashMap<>();
+@@ -49,4 +58,37 @@
+         }
+         return param;
+     }
++
++    @Override
++    public Map commentNotice(HttpServletRequest request) {
++        HashMap<Object, Object> param = new HashMap<>();
++        //获取email
++        String token=request.getHeader("token");
++        String emailData= JwtUtils.parseEmail(token);
++        QueryWrapper<Dynamic> dynamicQueryWrapper = new QueryWrapper<>();
++        dynamicQueryWrapper.eq("email", emailData)
++                        .gt("comment_count",0);
++        //动态记录合集
++        List<Dynamic> data = dynamicMapper.selectList(dynamicQueryWrapper);
++        param.put("dynamic",data);
++        List<Comments> comment=null;
++        //通过动态表合集查到Comments里的符合条件的对象合集
++        for ( Dynamic did:data){
++            Integer dId =did.getDId();
++            comment= commentsMapper.selectList(new QueryWrapper<Comments>().eq("d_id", dId));
++            param.put("comments",comment);
++        }
++        //通过评论表中的email查到user表中的head_picture
++        for(Comments comm:comment){
++            String email = comm.getEmail();
++            List user=userMapper.selectList(new QueryWrapper<User>().eq("email",email));
++            param.put("users",user);
++        }
++        return param;
++    }
++
++    @Override
++    public Map likeNotice(HttpServletRequest request) {
++        return null;
++    }
+ }
+Index: src/main/java/com/example/demo/GenerateTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo;\r\n\r\nimport com.baomidou.mybatisplus.annotation.DbType;\r\nimport com.baomidou.mybatisplus.generator.AutoGenerator;\r\nimport com.baomidou.mybatisplus.generator.config.DataSourceConfig;\r\nimport com.baomidou.mybatisplus.generator.config.GlobalConfig;\r\nimport com.baomidou.mybatisplus.generator.config.PackageConfig;\r\nimport com.baomidou.mybatisplus.generator.config.StrategyConfig;\r\nimport com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;\r\n/**\r\n * @author Chu\r\n * @create 2022-03-11-14:06\r\n */\r\npublic class GenerateTest {\r\n    public static void main(String[] args) {\r\n        //创建generator对象\r\n        AutoGenerator autoGenerator = new AutoGenerator();\r\n        //数据源\r\n        DataSourceConfig dataSourceConfig = new DataSourceConfig();\r\n        dataSourceConfig.setDbType(DbType.MYSQL);\r\n//        dataSourceConfig.setDriverName(\"com.mysql.cj.jdbc.Driver\");\r\n//        dataSourceConfig.setUsername(\"root\");\r\n//        dataSourceConfig.setPassword(\"116611\");\r\n//        dataSourceConfig.setUrl(\"jdbc:mysql://localhost:3306/fwftest?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC\");\r\n        dataSourceConfig.setDriverName(\"com.mysql.cj.jdbc.Driver\");\r\n        dataSourceConfig.setUsername(\"weibo\");\r\n        dataSourceConfig.setPassword(\"a2dDDMNe5ZTdkddm\");\r\n        dataSourceConfig.setUrl(\"jdbc:mysql://82.157.48.184:3306/weibo\");\r\n        autoGenerator.setDataSource(dataSourceConfig);\r\n        //全局配置\r\n        GlobalConfig globalConfig = new GlobalConfig();\r\n        globalConfig.setOutputDir(System.getProperty(\"user.dir\")+\"/src/main/java\");\r\n        globalConfig.setAuthor(\"admin\");\r\n        globalConfig.setOpen(false);\r\n        globalConfig.setServiceName(\"%sService\");\r\n        autoGenerator.setGlobalConfig(globalConfig);\r\n        //包信息\r\n        PackageConfig packageConfig = new PackageConfig();\r\n        packageConfig.setParent(\"com.example.demo\");\r\n        packageConfig.setEntity(\"entity\");\r\n        packageConfig.setMapper(\"mapper\");\r\n        packageConfig.setService(\"service\");\r\n        packageConfig.setServiceImpl(\"service.impl\");\r\n        packageConfig.setController(\"controller\");\r\n        autoGenerator.setPackageInfo(packageConfig);\r\n        //策略配置\r\n        StrategyConfig strategyConfig = new StrategyConfig();\r\n        strategyConfig.setInclude(\"dynamic\");\r\n        strategyConfig.setNaming(NamingStrategy.underline_to_camel);\r\n        strategyConfig.setColumnNaming(NamingStrategy.underline_to_camel);\r\n        strategyConfig.setEntityLombokModel(true);\r\n        autoGenerator.setStrategy(strategyConfig);\r\n        //运行\r\n        autoGenerator.execute();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/demo/GenerateTest.java b/src/main/java/com/example/demo/GenerateTest.java
+--- a/src/main/java/com/example/demo/GenerateTest.java	(revision 471b9a6a34bf589cc4233a6059a819857145594c)
++++ b/src/main/java/com/example/demo/GenerateTest.java	(date 1647945146588)
+@@ -45,7 +45,7 @@
+         autoGenerator.setPackageInfo(packageConfig);
+         //策略配置
+         StrategyConfig strategyConfig = new StrategyConfig();
+-        strategyConfig.setInclude("dynamic");
++        strategyConfig.setInclude("like");
+         strategyConfig.setNaming(NamingStrategy.underline_to_camel);
+         strategyConfig.setColumnNaming(NamingStrategy.underline_to_camel);
+         strategyConfig.setEntityLombokModel(true);

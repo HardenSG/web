@@ -1,0 +1,423 @@
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n    <modelVersion>4.0.0</modelVersion>\r\n    <parent>\r\n        <groupId>org.springframework.boot</groupId>\r\n        <artifactId>spring-boot-starter-parent</artifactId>\r\n        <version>2.3.4.RELEASE</version>\r\n        <relativePath/> <!-- lookup parent from repository -->\r\n    </parent>\r\n    <groupId>com.example</groupId>\r\n    <artifactId>demo</artifactId>\r\n    <version>0.0.1-SNAPSHOT</version>\r\n    <name>demo</name>\r\n    <description>Demo project for Spring Boot</description>\r\n    <properties>\r\n        <java.version>1.8</java.version>\r\n    </properties>\r\n\r\n    <dependencies>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-web</artifactId>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.mybatis.spring.boot</groupId>\r\n            <artifactId>mybatis-spring-boot-starter</artifactId>\r\n            <version>2.2.2</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-mail</artifactId>\r\n        </dependency>\r\n\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-devtools</artifactId>\r\n            <scope>runtime</scope>\r\n            <optional>true</optional>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>mysql</groupId>\r\n            <artifactId>mysql-connector-java</artifactId>\r\n            <scope>runtime</scope>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.projectlombok</groupId>\r\n            <artifactId>lombok</artifactId>\r\n            <optional>true</optional>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-test</artifactId>\r\n            <scope>test</scope>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>com.baomidou</groupId>\r\n            <artifactId>mybatis-plus-boot-starter</artifactId>\r\n            <version>3.4.2</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>com.baomidou</groupId>\r\n            <artifactId>mybatis-plus-generator</artifactId>\r\n            <version>3.3.2</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.apache.velocity</groupId>\r\n            <artifactId>velocity</artifactId>\r\n            <version>1.6.2</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>io.jsonwebtoken</groupId>\r\n            <artifactId>jjwt</artifactId>\r\n            <version>0.9.1</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>javax.xml.bind</groupId>\r\n            <artifactId>jaxb-api</artifactId>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>com.sun.xml.bind</groupId>\r\n            <artifactId>jaxb-impl</artifactId>\r\n            <version>2.3.0</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>com.sun.xml.bind</groupId>\r\n            <artifactId>jaxb-core</artifactId>\r\n            <version>2.3.0</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>javax.activation</groupId>\r\n            <artifactId>activation</artifactId>\r\n            <version>1.1.1</version>\r\n        </dependency>\r\n\r\n    </dependencies>\r\n    <build>\r\n        <!--springboot启动时，src/main/java下只会扫描加载.java文件，\r\n        而我的mapper.xml是放在src/main/java目录下，这里配置去扫描 xml文件-->\r\n        <resources>\r\n            <resource>\r\n                <directory>src/main/java</directory>\r\n                <includes>\r\n                    <include>**/*.xml</include>\r\n                </includes>\r\n            </resource>\r\n        </resources>\r\n\r\n        <plugins>\r\n            <plugin>\r\n                <groupId>org.springframework.boot</groupId>\r\n                <artifactId>spring-boot-maven-plugin</artifactId>\r\n                <configuration>\r\n                    <excludes>\r\n                        <exclude>\r\n                            <groupId>org.projectlombok</groupId>\r\n                            <artifactId>lombok</artifactId>\r\n                        </exclude>\r\n                    </excludes>\r\n                </configuration>\r\n            </plugin>\r\n        </plugins>\r\n    </build>\r\n\r\n</project>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml	(revision 66a447e9e89f2f0818c2ed34eced2dba176b149f)
++++ b/pom.xml	(date 1647519389989)
+@@ -92,6 +92,23 @@
+             <artifactId>activation</artifactId>
+             <version>1.1.1</version>
+         </dependency>
++        <dependency>
++            <groupId>commons-fileupload</groupId>
++            <artifactId>commons-fileupload</artifactId>
++            <version>1.3.1</version>
++        </dependency>
++       <dependency>
++        <groupId>org.springframework.boot</groupId>
++        <artifactId>spring-boot-starter-test</artifactId>
++        <scope>test</scope>
++        <exclusions>
++            <exclusion>
++                <groupId>org.junit.vintage</groupId>
++                <artifactId>junit-vintage-engine</artifactId>
++            </exclusion>
++        </exclusions>
++    </dependency>
++
+ 
+     </dependencies>
+     <build>
+Index: src/main/java/com/example/demo/service/impl/UserServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo.service.impl;\r\n\r\nimport com.example.demo.entity.User;\r\nimport com.example.demo.mapper.UserMapper;\r\nimport com.example.demo.service.UserService;\r\nimport com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.stereotype.Service;\r\n\r\n/**\r\n * <p>\r\n *  服务实现类\r\n * </p>\r\n *\r\n * @author admin\r\n * @since 2022-03-12\r\n */\r\n@Service\r\npublic class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {\r\n    @Autowired\r\n    private UserMapper usermapper;\r\n    @Override\r\n    public boolean userRepeat(String email) {\r\n        System.out.println(\"----------\"+usermapper.checkUser(email));\r\n        if(usermapper.checkUser(email)==null){\r\n            return true;\r\n        }else {\r\n            return false;\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/demo/service/impl/UserServiceImpl.java b/src/main/java/com/example/demo/service/impl/UserServiceImpl.java
+--- a/src/main/java/com/example/demo/service/impl/UserServiceImpl.java	(revision 66a447e9e89f2f0818c2ed34eced2dba176b149f)
++++ b/src/main/java/com/example/demo/service/impl/UserServiceImpl.java	(date 1647595716690)
+@@ -1,12 +1,19 @@
+ package com.example.demo.service.impl;
+ 
++import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+ import com.example.demo.entity.User;
+ import com.example.demo.mapper.UserMapper;
+ import com.example.demo.service.UserService;
+ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
++import com.example.demo.utils.JwtUtils;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Service;
+ 
++import javax.servlet.http.HttpServletRequest;
++import java.util.HashMap;
++import java.util.List;
++import java.util.Map;
++
+ /**
+  * <p>
+  *  服务实现类
+@@ -19,8 +26,9 @@
+ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+     @Autowired
+     private UserMapper usermapper;
++    //判断注册的email是否重复
+     @Override
+-    public boolean userRepeat(String email) {
++    public boolean userRepeat(String email){
+         System.out.println("----------"+usermapper.checkUser(email));
+         if(usermapper.checkUser(email)==null){
+             return true;
+@@ -28,4 +36,34 @@
+             return false;
+         }
+     }
++
++    //通过email修改name,birthday,introduction,sex,head_picture
++    public Map changeBy(User user,HttpServletRequest request) {
++        HashMap<Object, Object> param = new HashMap<>();
++        //获取email
++        String token=request.getHeader("token");
++        String emailData= JwtUtils.parseEmail(token);
++        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
++        userQueryWrapper.eq("email", emailData);
++        int num = usermapper.update(user, userQueryWrapper);
++        param.put("status","200");
++        param.put("msg","修改成功");
++        return param;
++    }
++
++    //通过email查询name,birthday,introduction,sex,head_picture
++    public Map selectBy(User user,HttpServletRequest request) {
++        HashMap<Object, Object> param = new HashMap<>();
++        //获取email
++        String token=request.getHeader("token");
++        String emailData= JwtUtils.parseEmail(token);
++        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
++        userQueryWrapper.eq("email", emailData);
++        List data = usermapper.selectList(userQueryWrapper);
++        param.put("status","200");
++        param.put("msg","查询成功");
++        param.put("List",data);
++        return param;
++    }
++
+ }
+Index: src/main/java/com/example/demo/entity/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo.entity;\r\n\r\nimport com.baomidou.mybatisplus.annotation.IdType;\r\nimport java.time.LocalDate;\r\nimport com.baomidou.mybatisplus.annotation.TableId;\r\nimport java.io.Serializable;\r\nimport lombok.Data;\r\nimport lombok.EqualsAndHashCode;\r\n\r\n/**\r\n * <p>\r\n * \r\n * </p>\r\n *\r\n * @author admin\r\n * @since 2022-03-12\r\n */\r\n@Data\r\n  @EqualsAndHashCode(callSuper = false)\r\n    public class User implements Serializable {\r\n\r\n    private static final long serialVersionUID=1L;\r\n\r\n      @TableId(value = \"u_id\", type = IdType.AUTO)\r\n      private Integer uId;\r\n\r\n    private String name;\r\n\r\n    private String email;\r\n\r\n    private LocalDate birthday;\r\n\r\n    private String password;\r\n\r\n    private String head_picture;\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/demo/entity/User.java b/src/main/java/com/example/demo/entity/User.java
+--- a/src/main/java/com/example/demo/entity/User.java	(revision 66a447e9e89f2f0818c2ed34eced2dba176b149f)
++++ b/src/main/java/com/example/demo/entity/User.java	(date 1647588991406)
+@@ -4,6 +4,8 @@
+ import java.time.LocalDate;
+ import com.baomidou.mybatisplus.annotation.TableId;
+ import java.io.Serializable;
++import java.util.Date;
++
+ import lombok.Data;
+ import lombok.EqualsAndHashCode;
+ 
+@@ -28,7 +30,7 @@
+ 
+     private String email;
+ 
+-    private LocalDate birthday;
++    private Date birthday;
+ 
+     private String password;
+ 
+Index: src/main/java/com/example/demo/utils/JwtUtils.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo.utils;\r\n\r\nimport io.jsonwebtoken.*;\r\nimport org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;\r\n\r\nimport java.util.Date;\r\nimport java.util.UUID;\r\n\r\n/**\r\n * @author Chu\r\n * @create 2022-03-11-21:06\r\n */\r\npublic class JwtUtils {\r\n\r\n    private static String signature = \"admin\";\r\n    private static long time = 1000*60*60*24;\r\n    public static String jwt(){\r\n        JwtBuilder jwtBuilder = Jwts.builder();\r\n        String jwtToken = jwtBuilder\r\n                .setHeaderParam(\"typ\",\"JWT\")\r\n                .setHeaderParam(\"alg\",\"HS256\")\r\n                //payload\r\n                .claim(\"username\",\"\")\r\n                .claim(\"role\",\"\")\r\n                //主题\r\n                .setSubject(\"\")\r\n                //有效时间\r\n                .setExpiration(new Date(System.currentTimeMillis()+time))\r\n                .setId(UUID.randomUUID().toString())\r\n                //签名\r\n                .signWith(SignatureAlgorithm.HS256,signature)\r\n                .compact();\r\n        return jwtToken;\r\n    }\r\n    public void parse(String token){\r\n        JwtParser jwtParser = Jwts.parser();\r\n        Jws<Claims> claimsJws = jwtParser.setSigningKey(signature).parseClaimsJws(token);\r\n        Claims body = claimsJws.getBody();\r\n        body.get(\"username\");\r\n        body.get(\"role\");\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/demo/utils/JwtUtils.java b/src/main/java/com/example/demo/utils/JwtUtils.java
+--- a/src/main/java/com/example/demo/utils/JwtUtils.java	(revision 66a447e9e89f2f0818c2ed34eced2dba176b149f)
++++ b/src/main/java/com/example/demo/utils/JwtUtils.java	(date 1647594390448)
+@@ -13,26 +13,28 @@
+ public class JwtUtils {
+ 
+     private static String signature = "admin";
+-    private static long time = 1000*60*60*24;
+-    public static String jwt(){
++    private static long time = 1000 * 60 * 60 * 24;
++
++    public static String jwt() {
+         JwtBuilder jwtBuilder = Jwts.builder();
+         String jwtToken = jwtBuilder
+-                .setHeaderParam("typ","JWT")
+-                .setHeaderParam("alg","HS256")
++                .setHeaderParam("typ", "JWT")
++                .setHeaderParam("alg", "HS256")
+                 //payload
+-                .claim("username","")
+-                .claim("role","")
++                .claim("username", "")
++                .claim("role", "")
+                 //主题
+                 .setSubject("")
+                 //有效时间
+-                .setExpiration(new Date(System.currentTimeMillis()+time))
++                .setExpiration(new Date(System.currentTimeMillis() + time))
+                 .setId(UUID.randomUUID().toString())
+                 //签名
+-                .signWith(SignatureAlgorithm.HS256,signature)
++                .signWith(SignatureAlgorithm.HS256, signature)
+                 .compact();
+         return jwtToken;
+     }
+-    public void parse(String token){
++
++    public void parse(String token) {
+         JwtParser jwtParser = Jwts.parser();
+         Jws<Claims> claimsJws = jwtParser.setSigningKey(signature).parseClaimsJws(token);
+         Claims body = claimsJws.getBody();
+@@ -40,4 +42,15 @@
+         body.get("role");
+ 
+     }
++    public static String parseEmail(String token){
++        JwtParser jwtParser = Jwts.parser();
++        Jws<Claims> claimsJws = jwtParser.setSigningKey(signature).parseClaimsJws(token);
++        Claims body = claimsJws.getBody();
++        String email = (String)body.get("email");
++        body.get("password");
++        return email;
++
++    }
++
+ }
++
+Index: src/main/java/com/example/demo/mapper/UserMapper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo.mapper;\r\n\r\nimport com.example.demo.entity.User;\r\nimport com.baomidou.mybatisplus.core.mapper.BaseMapper;\r\nimport org.apache.ibatis.annotations.Insert;\r\nimport org.apache.ibatis.annotations.Param;\r\nimport org.apache.ibatis.annotations.Select;\r\nimport org.springframework.stereotype.Repository;\r\n\r\n/**\r\n * <p>\r\n *  Mapper 接口\r\n * </p>\r\n *\r\n * @author admin\r\n * @since 2022-03-12\r\n */\r\n@Repository\r\npublic interface UserMapper extends BaseMapper<User> {\r\n@Insert(\"insert into user(name,password,email) VALUES(#{name},#{password},#{email})\")\r\n   int savaUser(@Param(\"name\") String name,@Param(\"password\") String password,@Param(\"email\")String email);\r\n@Select(\"SELECT email from user where email=#{email}\")\r\n   String checkUser(@Param(\"email\")String email);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/demo/mapper/UserMapper.java b/src/main/java/com/example/demo/mapper/UserMapper.java
+--- a/src/main/java/com/example/demo/mapper/UserMapper.java	(revision 66a447e9e89f2f0818c2ed34eced2dba176b149f)
++++ b/src/main/java/com/example/demo/mapper/UserMapper.java	(date 1647592824704)
+@@ -5,6 +5,7 @@
+ import org.apache.ibatis.annotations.Insert;
+ import org.apache.ibatis.annotations.Param;
+ import org.apache.ibatis.annotations.Select;
++import org.apache.ibatis.annotations.Update;
+ import org.springframework.stereotype.Repository;
+ 
+ /**
+@@ -21,4 +22,5 @@
+    int savaUser(@Param("name") String name,@Param("password") String password,@Param("email")String email);
+ @Select("SELECT email from user where email=#{email}")
+    String checkUser(@Param("email")String email);
++
+ }
+Index: src/main/java/com/example/demo/controller/UserController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo.controller;\r\n\r\n\r\nimport com.example.demo.entity.User;\r\nimport com.example.demo.mapper.UserMapper;\r\nimport com.example.demo.service.UserService;\r\nimport com.example.demo.service.impl.UserServiceImpl;\r\nimport lombok.extern.slf4j.Slf4j;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.mail.SimpleMailMessage;\r\nimport org.springframework.mail.javamail.JavaMailSenderImpl;\r\nimport org.springframework.web.bind.annotation.*;\r\n\r\nimport java.util.HashMap;\r\nimport java.util.List;\r\nimport java.util.Map;\r\nimport java.util.Random;\r\nimport java.util.concurrent.TimeUnit;\r\n\r\n/**\r\n * <p>\r\n *  前端控制器\r\n * </p>\r\n *\r\n * @author admin\r\n * @since 2022-03-12\r\n */\r\n@Slf4j\r\n@RestController\r\n@RequestMapping(\"user\")\r\npublic class UserController {\r\n    @Autowired\r\n    private UserMapper usermapper;\r\n    @Autowired\r\n    private UserService userService;\r\n    @Autowired\r\n    JavaMailSenderImpl mailSender;\r\n    String text = \"\";\r\n    @PostMapping(\"regist\")\r\n    @ResponseBody\r\n    public Map regist(@RequestParam(\"name\") String name,\r\n                      @RequestParam(\"password\") String password,\r\n                      @RequestParam(\"email\")String email,\r\n                      @RequestParam(\"code\")String code )\r\n    {\r\n        HashMap param = new HashMap<>();\r\n        if (!text.equals(code)) {\r\n            param.put(\"status\", 0);\r\n            param.put(\"msg\", \"验证码不正确\");\r\n        } else if (text.equals(code)&&userService.userRepeat(email)==true){\r\n            usermapper.savaUser(name, password, email);\r\n            param.put(\"status\", 200);\r\n            param.put(\"msg\",\"注册成功\");\r\n        }else{\r\n            param.put(\"msg\",\"注册失败\" );\r\n        }\r\n        return param;\r\n    }\r\n    @PostMapping(\"/capture\")\r\n    public Map Captcha(String email){\r\n        HashMap captcha = new HashMap<>();\r\n        if(userService.userRepeat(email) == true){\r\n        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();\r\n        //邮件设置\r\n        simpleMailMessage.setSubject(\"验证码\");\r\n        text=String.valueOf((int)((Math.random()*9+1)*1000));\r\n        System.out.println(text);\r\n        simpleMailMessage.setText(\"您好，验证码为：\"+text);\r\n        simpleMailMessage.setTo(email);\r\n        simpleMailMessage.setFrom(\"rena2928992879@163.com\");\r\n        mailSender.send(simpleMailMessage);\r\n        }else{\r\n            captcha.put(\"msg\",\"邮箱重复\");\r\n        }\r\n        return captcha;\r\n    }\r\n\r\n\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/demo/controller/UserController.java b/src/main/java/com/example/demo/controller/UserController.java
+--- a/src/main/java/com/example/demo/controller/UserController.java	(revision 66a447e9e89f2f0818c2ed34eced2dba176b149f)
++++ b/src/main/java/com/example/demo/controller/UserController.java	(date 1647592580796)
+@@ -5,16 +5,18 @@
+ import com.example.demo.mapper.UserMapper;
+ import com.example.demo.service.UserService;
+ import com.example.demo.service.impl.UserServiceImpl;
++import com.example.demo.utils.UploadUtils;
++import lombok.Data;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.mail.SimpleMailMessage;
+ import org.springframework.mail.javamail.JavaMailSenderImpl;
+ import org.springframework.web.bind.annotation.*;
++import org.springframework.web.multipart.MultipartFile;
+ 
+-import java.util.HashMap;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Random;
++import javax.servlet.http.HttpSession;
++import java.io.IOException;
++import java.util.*;
+ import java.util.concurrent.TimeUnit;
+ 
+ /**
+@@ -28,16 +30,18 @@
+ @Slf4j
+ @RestController
+ @RequestMapping("user")
++@ResponseBody
+ public class UserController {
+     @Autowired
+     private UserMapper usermapper;
+     @Autowired
+     private UserService userService;
++
+     @Autowired
+     JavaMailSenderImpl mailSender;
+     String text = "";
+     @PostMapping("regist")
+-    @ResponseBody
++
+     public Map regist(@RequestParam("name") String name,
+                       @RequestParam("password") String password,
+                       @RequestParam("email")String email,
+@@ -56,7 +60,7 @@
+         }
+         return param;
+     }
+-    @PostMapping("/capture")
++    @PostMapping("capture")
+     public Map Captcha(String email){
+         HashMap captcha = new HashMap<>();
+         if(userService.userRepeat(email) == true){
+@@ -74,6 +78,24 @@
+         }
+         return captcha;
+     }
++   //返回加工过的url
++    @PostMapping("url")
++    public String url(MultipartFile photo, HttpSession session) throws IOException {
++       return UploadUtils.upload(photo,session);
++    }
++    //个人资料的修改
++    @PutMapping("data")
++    public Map data(User user)
++    {
++        HashMap<Object, Object> map = new HashMap<>();
++
++        return map;
++    }
++
++
++
++
++
+ 
+ 
+ }
+Index: src/main/resources/application.yaml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>spring:\r\n  datasource:\r\n    url: jdbc:mysql://82.157.48.184:3306/weibo?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&serverTimezone=GMT%2B8\r\n    username: weibo\r\n    password: \"a2dDDMNe5ZTdkddm\"\r\n    driver-class-name: com.mysql.cj.jdbc.Driver\r\n  mail:\r\n    #邮箱配置\r\n    protocol: smtp  #邮箱协议\r\n    host: smtp.163.com #网易邮箱服务器地址\r\n    username: rena2928992879@163.com  #发件人邮箱\r\n    password: RDIYLOGCYHDKNXRU  #授权码\r\n    default-encoding: UTF-8  #编码格式\r\n    properties:\r\n      mail:\r\n        debug: true #打印日志\r\nmybatis-plus:\r\n  configuration:\r\n    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl\r\n  mapper-locations: classpath:**/mapper/xml/*.xml\r\nserver:\r\n  port: 8080
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/application.yaml b/src/main/resources/application.yaml
+--- a/src/main/resources/application.yaml	(revision 66a447e9e89f2f0818c2ed34eced2dba176b149f)
++++ b/src/main/resources/application.yaml	(date 1647522194483)
+@@ -14,6 +14,9 @@
+     properties:
+       mail:
+         debug: true #打印日志
++  servlet:
++    multipart:
++      max-file-size: 10MB
+ mybatis-plus:
+   configuration:
+     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+Index: src/main/java/com/example/demo/utils/UploadUtils.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/demo/utils/UploadUtils.java b/src/main/java/com/example/demo/utils/UploadUtils.java
+new file mode 100644
+--- /dev/null	(date 1647587521255)
++++ b/src/main/java/com/example/demo/utils/UploadUtils.java	(date 1647587521255)
+@@ -0,0 +1,31 @@
++package com.example.demo.utils;
++
++import org.springframework.web.multipart.MultipartFile;
++
++import javax.servlet.ServletContext;
++import javax.servlet.http.HttpSession;
++import java.io.File;
++import java.io.IOException;
++import java.util.UUID;
++
++public class UploadUtils {
++    public static String upload(MultipartFile photo, HttpSession session) throws IOException {
++        //获取上传的文件的文件名
++        String fileName = photo.getOriginalFilename();
++        //处理文件重名问题
++        String hzName = fileName.substring(fileName.lastIndexOf("."));
++        fileName = UUID.randomUUID().toString() + hzName;
++        //获取服务器中photo目录的路径
++        ServletContext servletContext = session.getServletContext();
++        String photoPath = servletContext.getRealPath("photo");
++        File file = new File(photoPath);
++        if(!file.exists()){
++            file.mkdir();
++        }
++        String finalPath = photoPath + File.separator + fileName;
++       //实现上传功能
++        photo.transferTo(new File(finalPath));
++        return finalPath;
++
++    }
++}
+Index: target/classes/application.yaml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>spring:\r\n  datasource:\r\n    url: jdbc:mysql://82.157.48.184:3306/weibo?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&serverTimezone=GMT%2B8\r\n    username: weibo\r\n    password: \"a2dDDMNe5ZTdkddm\"\r\n    driver-class-name: com.mysql.cj.jdbc.Driver\r\n  mail:\r\n    #邮箱配置\r\n    protocol: smtp  #邮箱协议\r\n    host: smtp.163.com #网易邮箱服务器地址\r\n    username: rena2928992879@163.com  #发件人邮箱\r\n    password: RDIYLOGCYHDKNXRU  #授权码\r\n    default-encoding: UTF-8  #编码格式\r\n    properties:\r\n      mail:\r\n        debug: true #打印日志\r\nmybatis-plus:\r\n  configuration:\r\n    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl\r\n  mapper-locations: classpath:**/mapper/xml/*.xml\r\nserver:\r\n  port: 8080
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/target/classes/application.yaml b/target/classes/application.yaml
+--- a/target/classes/application.yaml	(revision 66a447e9e89f2f0818c2ed34eced2dba176b149f)
++++ b/target/classes/application.yaml	(date 1647522194483)
+@@ -14,6 +14,9 @@
+     properties:
+       mail:
+         debug: true #打印日志
++  servlet:
++    multipart:
++      max-file-size: 10MB
+ mybatis-plus:
+   configuration:
+     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+Index: src/test/java/com/example/demo/DemoApplicationTests.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo;\r\n\r\nimport org.junit.jupiter.api.Test;\r\nimport org.springframework.boot.test.context.SpringBootTest;\r\n\r\n@SpringBootTest\r\nclass DemoApplicationTests {\r\n\r\n    @Test\r\n    void contextLoads() {\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/test/java/com/example/demo/DemoApplicationTests.java b/src/test/java/com/example/demo/DemoApplicationTests.java
+--- a/src/test/java/com/example/demo/DemoApplicationTests.java	(revision 66a447e9e89f2f0818c2ed34eced2dba176b149f)
++++ b/src/test/java/com/example/demo/DemoApplicationTests.java	(date 1647519914148)
+@@ -1,13 +1,16 @@
+ package com.example.demo;
+ 
++import com.example.demo.utils.UploadUtils;
+ import org.junit.jupiter.api.Test;
++import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.boot.test.context.SpringBootTest;
+ 
+ @SpringBootTest
+ class DemoApplicationTests {
+-
+-    @Test
++@Autowired
++        @Test
+     void contextLoads() {
++
+     }
+ 
+ }

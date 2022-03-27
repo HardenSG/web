@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="00fcb7e0-a18b-4e53-9487-b69cbf6ed890" name="Changes" comment="评论通知">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/impl/DynamicServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/impl/DynamicServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/entity/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/entity/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/impl/UserServiceImpl.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="Notice" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="mergetest" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="4" />
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="back-register" />
+                    <option name="lastUsedInstant" value="1648361066" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="mergetest" />
+                    <option name="lastUsedInstant" value="1648304656" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="Notice" />
+                    <option name="lastUsedInstant" value="1648277803" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="webback" />
+                    <option name="lastUsedInstant" value="1647223529" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$/.." />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$PROJECT_DIR$/../../../../software/apache-maven-3.8.1" />
+        <option name="useMavenConfig" value="true" />
+        <option name="userSettingsFile" value="D:\software\apache-maven-3.8.1\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="#JAVA_HOME" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="MavenRunner">
+    <option name="jreName" value="#JAVA_HOME" />
+    <option name="skipTests" value="true" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectId" id="26K9todYo0v44j3ki31PDqkR0wQ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.importing" />
+  </component>
+  <component name="RunManager" selected="Spring Boot.DemoApplication">
+    <configuration name="GenerateTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.demo.GenerateTest" />
+      <module name="demo" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="demo" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.demo.DemoApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.GenerateTest" />
+        <item itemvalue="Application.GenerateTest" />
+        <item itemvalue="Application.GenerateTest" />
+        <item itemvalue="Application.GenerateTest" />
+        <item itemvalue="Application.GenerateTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="00fcb7e0-a18b-4e53-9487-b69cbf6ed890" name="Changes" comment="" />
+      <created>1647161673277</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1647161673277</updated>
+      <workItem from="1647161673278" duration="45000" />
+      <workItem from="1647161738809" duration="7912000" />
+      <workItem from="1647229779152" duration="10626000" />
+      <workItem from="1647259761693" duration="12660000" />
+      <workItem from="1647325854906" duration="17497000" />
+      <workItem from="1647352008897" duration="551000" />
+      <workItem from="1647398571357" duration="2753000" />
+      <workItem from="1647414465947" duration="7186000" />
+      <workItem from="1647517546256" duration="6901000" />
+      <workItem from="1647563739593" duration="49000" />
+      <workItem from="1647585186614" duration="343000" />
+      <workItem from="1647585556690" duration="16504000" />
+      <workItem from="1647645679524" duration="16000" />
+      <workItem from="1647667996524" duration="2405000" />
+      <workItem from="1647670468838" duration="12446000" />
+      <workItem from="1647736136968" duration="13006000" />
+      <workItem from="1647942114335" duration="13778000" />
+      <workItem from="1648017065301" duration="24780000" />
+      <workItem from="1648129121889" duration="2777000" />
+      <workItem from="1648186594160" duration="6343000" />
+      <workItem from="1648216458702" duration="26270000" />
+      <workItem from="1648343314065" duration="19000" />
+      <workItem from="1648360241075" duration="1023000" />
+      <workItem from="1648361300181" duration="963000" />
+    </task>
+    <task id="LOCAL-00001" summary="注册功能">
+      <created>1647352287576</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1647352287576</updated>
+    </task>
+    <task id="LOCAL-00002" summary="返回msg，修复输入验证码后才提示邮箱重复bug">
+      <created>1647434040860</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1647434040860</updated>
+    </task>
+    <task id="LOCAL-00003" summary="个人资料，动态删除">
+      <created>1647776656498</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1647776656499</updated>
+    </task>
+    <task id="LOCAL-00004" summary="测试">
+      <created>1648104988917</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1648104988917</updated>
+    </task>
+    <task id="LOCAL-00005" summary="通知页">
+      <created>1648304364424</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1648304364424</updated>
+    </task>
+    <task id="LOCAL-00006" summary="评论通知">
+      <created>1648360376641</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1648360376641</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="back-register" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="注册功能" />
+    <MESSAGE value="返回msg，修复输入验证码后才提示邮箱重复bug" />
+    <MESSAGE value="个人资料" />
+    <MESSAGE value="个人资料，动态删除" />
+    <MESSAGE value="测试" />
+    <MESSAGE value="通知页" />
+    <MESSAGE value="评论通知" />
+    <option name="LAST_COMMIT_MESSAGE" value="评论通知" />
+  </component>
+</project>

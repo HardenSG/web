@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="00fcb7e0-a18b-4e53-9487-b69cbf6ed890" name="Changes" comment="个人资料，动态删除">
+      <change beforePath="$PROJECT_DIR$/../springbootdemo1/src/main/java/com/example/demo/controller/DynamicController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootdemo1/src/main/java/com/example/demo/controller/DynamicController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootdemo1/src/main/java/com/example/demo/mapper/CommentsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootdemo1/src/main/java/com/example/demo/mapper/CommentsMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootdemo1/src/main/java/com/example/demo/service/DynamicService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootdemo1/src/main/java/com/example/demo/service/DynamicService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootdemo1/src/main/java/com/example/demo/service/impl/CommentsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootdemo1/src/main/java/com/example/demo/service/impl/CommentsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootdemo1/src/main/java/com/example/demo/service/impl/DynamicServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootdemo1/src/main/java/com/example/demo/service/impl/DynamicServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootdemo1/target/classes/com/example/demo/controller/DynamicController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootdemo1/target/classes/com/example/demo/controller/DynamicController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootdemo1/target/classes/com/example/demo/mapper/CommentsMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootdemo1/target/classes/com/example/demo/mapper/CommentsMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootdemo1/target/classes/com/example/demo/service/DynamicService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootdemo1/target/classes/com/example/demo/service/DynamicService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootdemo1/target/classes/com/example/demo/service/impl/CommentsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootdemo1/target/classes/com/example/demo/service/impl/CommentsServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootdemo1/target/classes/com/example/demo/service/impl/DynamicServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootdemo1/target/classes/com/example/demo/service/impl/DynamicServiceImpl.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="webback" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="4" />
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="Notice" />
+                    <option name="lastUsedInstant" value="1648109427" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="mergetest" />
+                    <option name="lastUsedInstant" value="1648109316" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="back-register" />
+                    <option name="lastUsedInstant" value="1647224237" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="webback" />
+                    <option name="lastUsedInstant" value="1647223529" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$/.." />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$PROJECT_DIR$/../../../../software/apache-maven-3.8.1" />
+        <option name="useMavenConfig" value="true" />
+        <option name="userSettingsFile" value="D:\software\apache-maven-3.8.1\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="#JAVA_HOME" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="MavenRunner">
+    <option name="jreName" value="#JAVA_HOME" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectId" id="26K9todYo0v44j3ki31PDqkR0wQ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.importing" />
+  </component>
+  <component name="RunManager" selected="Spring Boot.DemoApplication">
+    <configuration name="GenerateTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.demo.GenerateTest" />
+      <module name="demo" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DemoApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="springbootdemo1 - 副本" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.demo.DemoApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="demo" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.demo.DemoApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.GenerateTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="00fcb7e0-a18b-4e53-9487-b69cbf6ed890" name="Changes" comment="" />
+      <created>1647161673277</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1647161673277</updated>
+      <workItem from="1647161673278" duration="45000" />
+      <workItem from="1647161738809" duration="7912000" />
+      <workItem from="1647229779152" duration="10626000" />
+      <workItem from="1647259761693" duration="12660000" />
+      <workItem from="1647325854906" duration="17497000" />
+      <workItem from="1647352008897" duration="551000" />
+      <workItem from="1647398571357" duration="2753000" />
+      <workItem from="1647414465947" duration="7186000" />
+      <workItem from="1647517546256" duration="6901000" />
+      <workItem from="1647563739593" duration="49000" />
+      <workItem from="1647585186614" duration="343000" />
+      <workItem from="1647585556690" duration="16504000" />
+      <workItem from="1647645679524" duration="16000" />
+      <workItem from="1647667996524" duration="2405000" />
+      <workItem from="1647670468838" duration="12446000" />
+      <workItem from="1647736136968" duration="13006000" />
+      <workItem from="1647942114335" duration="13778000" />
+      <workItem from="1648017065301" duration="12155000" />
+      <workItem from="1648109247602" duration="744000" />
+    </task>
+    <task id="LOCAL-00001" summary="注册功能">
+      <created>1647352287576</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1647352287576</updated>
+    </task>
+    <task id="LOCAL-00002" summary="返回msg，修复输入验证码后才提示邮箱重复bug">
+      <created>1647434040860</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1647434040860</updated>
+    </task>
+    <task id="LOCAL-00003" summary="个人资料，动态删除">
+      <created>1647776656498</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1647776656499</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="back-register" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="注册功能" />
+    <MESSAGE value="返回msg，修复输入验证码后才提示邮箱重复bug" />
+    <MESSAGE value="个人资料" />
+    <MESSAGE value="个人资料，动态删除" />
+    <option name="LAST_COMMIT_MESSAGE" value="个人资料，动态删除" />
+  </component>
+</project>

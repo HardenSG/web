@@ -1,0 +1,9 @@
+<changelist name="Uncommitted_changes_before_Checkout_at_2022_3_18_17_42_[Changes]" date="1647596568437" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2022_3_18_17_42_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 2022/3/18 17:42 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/test-classes/com/example/demo/DemoApplicationTests.class" />
+    <option name="AFTER_PATH" value="target/test-classes/com/example/demo/DemoApplicationTests.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2022_3_18_17_42_[Changes]/DemoApplicationTests.class" />
+  </binary>
+</changelist>
