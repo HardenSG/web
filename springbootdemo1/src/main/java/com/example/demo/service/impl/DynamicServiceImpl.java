@@ -49,4 +49,8 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
         }
         return param;
     }
+
+
+
+
 }

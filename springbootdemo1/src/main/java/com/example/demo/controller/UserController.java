@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @RestController
-@RequestMapping("user")
+@RequestMapping
 @ResponseBody
 public class UserController {
     @Autowired
@@ -41,7 +41,7 @@ public class UserController {
     @Autowired
     JavaMailSenderImpl mailSender;
     String text = "";
-    @PostMapping("regist")
+    @PostMapping("/user/regist")
 
     public Map regist(@RequestParam("name") String name,
                       @RequestParam("password") String password,
@@ -61,7 +61,7 @@ public class UserController {
         }
         return param;
     }
-    @PostMapping("capture")
+    @PostMapping("/user/capture")
     public Map Captcha(String email){
         HashMap captcha = new HashMap<>();
         if(userService.userRepeat(email) == true){
@@ -80,20 +80,26 @@ public class UserController {
         return captcha;
     }
    //返回加工过的url
-    @PostMapping("url")
+    @PostMapping("/user/url")
     public String url(MultipartFile photo, HttpSession session) throws IOException {
        return UploadUtils.upload(photo,session);
     }
     //个人资料的修改
-    @PutMapping("updateData")
+    @PutMapping("/user/updateData")
     public Map updateData(User user, HttpServletRequest request,@RequestParam("email") String email) {
        return userService.changeBy(user,request);
     }
     //个人资料的展示
-    @GetMapping("showData")
+    @GetMapping("/user/showData")
     public  Map showData(HttpServletRequest request){
         return userService.selectBy(request);
 
+    }
+
+    //个人资料通过email展示
+    @GetMapping("/user/showDataByemail")
+    public Map selectByemail(String email){
+        return userService.selectByemail(email);
     }
 
 

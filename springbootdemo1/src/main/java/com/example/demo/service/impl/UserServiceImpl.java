@@ -67,7 +67,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("email", emailData);
         List data = usermapper.selectList(userQueryWrapper);
-        if(data==null){
+        if(data.size()==0){
+            param.put("msg","此用户不存在");
+
+        }else{
+
+            param.put("status","200");
+            param.put("msg","查询成功");
+            param.put("List",data);
+        }
+        return param;
+    }
+
+
+    //通过email查询name,birthday,introduction,sex,head_picture
+    public  Map selectByemail(String email) {
+        HashMap<Object, Object> param = new HashMap<>();
+
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("email", email);
+        List data = usermapper.selectList(userQueryWrapper);
+        if(data.size()==0){
             param.put("msg","此用户不存在");
 
         }else{
