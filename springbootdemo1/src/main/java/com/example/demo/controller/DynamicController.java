@@ -37,6 +37,8 @@ public class DynamicController {
     TopicService topicService;
     @Autowired
     FollowService followService;
+    @Autowired
+    BlackListService blackListService;
 
 
 
@@ -185,17 +187,27 @@ public class DynamicController {
      * @return
      */
     @PostMapping("/dynamic/comment")
-    public Map comment(@RequestParam("comment") String comment , @RequestParam("dId") int dId , @RequestParam("commentCount") int commentCount, HttpServletRequest request){
+    public Map comment(@RequestParam("comment") String comment , @RequestParam("dId") int dId ,
+                       @RequestParam("commentCount") int commentCount,
+                       @RequestParam("dynamicUserEmail") String dynamicUserEmail,
+                       HttpServletRequest request){
 
         Map param = new HashMap();
-        //获得email
+        //获得用户email
         String email = JwtUtils.parseEmail(request.getHeader("token"));
+        //检查黑名单
+        BlackList blackList = new BlackList(dynamicUserEmail, email);
+        if(blackListService.isExist(blackList)){
+            param.put("status","200");
+            param.put("msg","您暂时无法评论");
+            return param;
+        }
         //获得现在时间
         Date date = new Date(System.currentTimeMillis());
         //添加信息到comments表
         Comments comments = new Comments(dId,email,comment,date);
         int i = commentsService.insertComment(comments);
-        //获得点赞用户的信息
+        //获得当前用户的信息
         User userByEmail = userService.getUserByEmail(email);
         if(i!=0){
             commentCount = commentCount+1;

@@ -11,7 +11,6 @@ import java.util.UUID;
  * @create 2022-03-11-21:06
  */
 public class JwtUtils {
-
     private static String signature = "admin";
     private static long time = 1000*60*60*24;
     public static String jwt(String email,String password){

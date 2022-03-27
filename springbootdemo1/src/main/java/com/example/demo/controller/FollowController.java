@@ -1,14 +1,8 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.entity.Comments;
-import com.example.demo.entity.Dynamic;
-import com.example.demo.entity.Follow;
-import com.example.demo.entity.User;
-import com.example.demo.service.DynamicService;
-import com.example.demo.service.FollowService;
-import com.example.demo.service.TopicService;
-import com.example.demo.service.UserService;
+import com.example.demo.entity.*;
+import com.example.demo.service.*;
 import com.example.demo.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +35,8 @@ public class FollowController {
     private DynamicService dynamicService;
     @Autowired
     private TopicService topicService;
-
+    @Autowired
+    private BlackListService blackListService;
 
 
     /**
@@ -55,6 +50,12 @@ public class FollowController {
         Map param = new HashMap();
         //得到email
         String userEmail = JwtUtils.parseEmail( request.getHeader("token"));
+        BlackList blackList = new BlackList(email, userEmail);
+        if(blackListService.isExist(blackList)){
+            param.put("status","200");
+            param.put("msg","您暂时无法关注");
+            return param;
+        }
         int i = followService.insertFollow(userEmail,email);
         if(i==1){
             param.put("status",200);
@@ -65,21 +66,5 @@ public class FollowController {
         }
         return param;
     }
-    @PutMapping("/follow")
-    public Map deleteFollow(HttpServletRequest request,String email){
-        Map param = new HashMap();
-        //得到email
-        String userEmail = JwtUtils.parseEmail( request.getHeader("token"));
-        int i = followService.insertFollow(userEmail,email);
-        if(i==1){
-            param.put("status",200);
-            param.put("msg","关注成功");
-        }else {
-            param.put("status",0);
-            param.put("msg","关注失败");
-        }
-        return param;
-    }
-
 }
 
