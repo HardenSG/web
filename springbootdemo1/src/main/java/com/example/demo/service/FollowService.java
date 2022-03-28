@@ -17,4 +17,6 @@ import java.util.List;
 public interface FollowService extends IService<Follow> {
     int insertFollow(String uId,String followId);
     List getFollowByUserEmail(String userEmail);
+    boolean isExist(Follow follow);
+    int deleteFollow(Follow follow);
 }

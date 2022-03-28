@@ -18,9 +18,9 @@
 //public class DynamicServiceImplTest {
 //    @Autowired
 //    private DynamicService dynamicService;
-////   @Test
-////    void insertlike(){
-////       System.out.println(dynamicService.updateByColumn("like", 8, 8));
-////   }
+//   @Test
+//    void insertlike(){
+//       System.out.println(dynamicService.updateByColumn("like", 8, 8));
+//   }
 //
 //}

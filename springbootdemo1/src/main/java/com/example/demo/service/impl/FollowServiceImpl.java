@@ -35,4 +35,26 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
         return follows;
     }
 
+    @Override
+    public boolean isExist(Follow follow) {
+        QueryWrapper<Follow> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("u_email",follow.getUEmail())
+                .eq("followed_email",follow.getFollowedEmail());
+        Follow follow1 = followMapper.selectOne(queryWrapper);
+        if(follow1!=null){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    @Override
+    public int deleteFollow(Follow follow) {
+        QueryWrapper<Follow> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("u_email",follow.getUEmail())
+                .eq("followed_email",follow.getFollowedEmail());
+        int delete = followMapper.delete(queryWrapper);
+        return delete;
+    }
+
 }
