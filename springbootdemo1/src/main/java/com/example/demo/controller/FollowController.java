@@ -74,9 +74,6 @@ public class FollowController {
         }
         return param;
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f84dd0ad97cfbb19bb5e9c96ddc09e75e206599
 }
 
