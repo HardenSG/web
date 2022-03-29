@@ -214,6 +214,7 @@ public class DynamicController {
         //获得现在时间
         Date date = new Date(System.currentTimeMillis());
         //添加信息到comments表
+        //获得点赞用户的信息
         Comments comments = new Comments(dId,email,comment,date);
         int i = commentsService.insertComment(comments);
         //获得当前用户的信息
@@ -232,7 +233,7 @@ public class DynamicController {
             param.put("status","0");
             param.put("msg","评论失败");
         }
-        return param;
+      return param;
     }
 
     /**
@@ -308,6 +309,18 @@ public class DynamicController {
         return dynamicService.deleteDynamic(request,did,email);
     }
 
+
+    //评论通知
+    @GetMapping("/dynamic/commentNotice")
+    public Map commentNotice(HttpServletRequest request){
+        return dynamicService.commentNotice(request);
+    }
+
+    //点赞通知
+    @GetMapping("/dynamic/likeNotice")
+    public Map likeNotice(HttpServletRequest request) {
+        return dynamicService.likeNotice(request);
+    }
     /**
      *关注人的动态
      * @param request

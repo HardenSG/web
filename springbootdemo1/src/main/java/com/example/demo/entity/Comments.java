@@ -8,6 +8,7 @@ import java.util.Date;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * <p>
@@ -17,7 +18,7 @@ import lombok.EqualsAndHashCode;
  * @author Chu
  * @since 2022-03-19
  */
-@Data
+   @Data
   @EqualsAndHashCode(callSuper = false)
     public class Comments implements Serializable {
 
@@ -41,6 +42,7 @@ import lombok.EqualsAndHashCode;
       private Integer commentId;
 
 
+      private int commentRead;
 
     public Comments(){ }
 
@@ -50,4 +52,6 @@ import lombok.EqualsAndHashCode;
     this.comment = comment;
     this.commentDate = commentDate;
   }
+
+
 }

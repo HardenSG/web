@@ -81,6 +81,9 @@ public interface DynamicService extends IService<Dynamic> {
     List<Integer> getDynamicIdByEmail(String email);
     int noticeCount(String email);
 
+  Map commentNotice(HttpServletRequest request);
+
+  Map likeNotice(HttpServletRequest request);
 }
 
 

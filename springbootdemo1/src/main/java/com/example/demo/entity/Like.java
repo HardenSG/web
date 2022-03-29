@@ -31,8 +31,10 @@ import lombok.EqualsAndHashCode;
 
     private String email;
 
-    Date likeDate;
 
+
+  private Date likeDate;
+  private int likeRead;
   public Like() {
   }
 
