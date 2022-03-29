@@ -24,6 +24,4 @@ import java.sql.Date;
 public interface DynamicMapper extends BaseMapper<Dynamic> {
 
      int insertDynamic(String email,String content, String picture, Date date);
-     int insertDynamic1(Dynamic dynamic);
-     Dynamic queryForOne(int dId);
 }

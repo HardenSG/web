@@ -3,6 +3,8 @@ package com.example.demo.service;
 import com.example.demo.entity.DynamicPicture;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface DynamicPictureService extends IService<DynamicPicture> {
     int insertDynamicPicture(DynamicPicture dynamicPicture);
+    List queryPicure(int dId);
 }

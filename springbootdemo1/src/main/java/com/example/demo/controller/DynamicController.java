@@ -9,10 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -83,7 +80,6 @@ public class DynamicController {
                 }
                 dId = topicService.searchTopicId(topic);
             }
-
         }
 
         //放进一个dynamic对象里
@@ -91,12 +87,15 @@ public class DynamicController {
         //进行添加
         int i = dynamicService.insertDynamic1(dynamic);
         //图片添加到动态图片表里
+        int j = 0;
+        List pictures = new LinkedList();
         if(picture.length > 0){
             for (MultipartFile photo : picture) {
                 if(!photo.isEmpty()){
                     try {
                         String upload = UploadUtils.upload(photo, session);
                         dynamicPictureService.insertDynamicPicture(new DynamicPicture(null,dynamic.getDId(),upload));
+                        pictures.add(upload);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -107,6 +106,7 @@ public class DynamicController {
             User userByEmail = userService.getUserByEmail(email);
             param.put("topic",topic);
             param.put("dynamic",dynamic);
+            param.put("pictures",pictures );
             param.put("user",userByEmail);
             param.put("status", "200");
             param.put("message","添加成功");
@@ -227,7 +227,7 @@ public class DynamicController {
             param.put("commentCount",commentCount);
             param.put("status","200");
             param.put("msg","评论成功");
-        }else {
+        }else{
             param.put("status","0");
             param.put("msg","评论失败");
         }
@@ -259,6 +259,8 @@ public class DynamicController {
             User userByEmail = userService.getUserByEmail(email);
             //拿到至多5条评论
             List<Comments> comments = commentsService.getCommentsIncludeName(commentsService.selectCommentsByDidLimit(dynamic.getDId(),0,5));
+            //拿到动态图片
+            List pictures = dynamicPictureService.queryPicure(dynamic.getDId());
             //原创
             if (dynamic.getOriginalId()==0){
                 //type:0 说明是原创
@@ -273,6 +275,7 @@ public class DynamicController {
                 param.put("originalUser",originalUser);
             }
             param.put("dynamic",dynamic);
+            param.put("pictures",pictures);
             param.put("user",userByEmail);
             param.put("comments",comments);
             param.put("topic",topic);

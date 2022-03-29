@@ -39,7 +39,7 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
 
     @Override
     public int insertDynamic1(Dynamic dynamic) {
-        return dynamicMapper.insertDynamic1(dynamic);
+        return dynamicMapper.insert(dynamic);
     }
 
     /**
