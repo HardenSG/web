@@ -40,7 +40,7 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         int insert = commentsMapper.insert(comments);
         return insert;
     }
-
+    //通过email查到comments里的记录
     @Override
     public List<Comments> selectComments(String email) {
         QueryWrapper<Comments> queryWrapper= new QueryWrapper<>();
@@ -48,7 +48,7 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         List<Comments> comments = commentsMapper.selectList(queryWrapper);
         return comments;
     }
-
+    //通过did查comments里的记录
     @Override
     public List<Comments> selectCommentsByDid(int dId) {
         QueryWrapper<Comments> queryWrapper= new QueryWrapper<>();
@@ -56,7 +56,7 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         List<Comments> comments = commentsMapper.selectList(queryWrapper);
         return comments;
     }
-
+    //
     @Override
     public List<Comments> selectCommentsByDidLimit(int dId , int pageNumber , int pageSize) {
         Page<Comments> page= new Page<>(pageNumber,pageSize);
@@ -65,12 +65,11 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         List<Comments> records = commentsMapper.selectPage(page, queryWrapper).getRecords();
         return records;
     }
-
+    //查到的评论表记录得到email，在去查user表里的name,head_picture
     @Override
     public List<Comments> getCommentsIncludeName(List<Comments> comments){
         List<Comments> commentsList = new LinkedList<>();
-        for (Comments comment :
-                comments) {
+        for (Comments comment : comments) {
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
             queryWrapper.select("name", "head_picture").eq("email",comment.getEmail());
             User user = userMapper.selectOne(queryWrapper);

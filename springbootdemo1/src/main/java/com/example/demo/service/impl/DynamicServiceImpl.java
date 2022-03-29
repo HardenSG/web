@@ -3,15 +3,18 @@ package com.example.demo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.demo.entity.Comments;
 import com.example.demo.entity.Dynamic;
-import com.example.demo.entity.Follow;
+import com.example.demo.entity.Like;
+import com.example.demo.mapper.CommentsMapper;
 import com.example.demo.mapper.DynamicMapper;
+import com.example.demo.mapper.LikeMapper;
+import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.DynamicService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.demo.entity.Dynamic;
 import com.example.demo.entity.User;
 import java.sql.Date;
 import java.util.List;
@@ -22,7 +25,6 @@ import java.util.Map;
  * <p>
  *  服务实现类
  * </p>
- *
  * @author admin
  * @since 2022-03-15
  */
@@ -32,6 +34,12 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
 
    @Autowired
     private DynamicMapper dynamicMapper;
+   @Autowired
+   private CommentsMapper commentsMapper;
+   @Autowired
+   private UserMapper userMapper;
+   @Autowired
+   private LikeMapper likeMapper;
     @Override
     public int insertDynamic(String email, String content ,String picture, Date date) {
         return dynamicMapper.insertDynamic(email,content,picture,date);
@@ -136,6 +144,7 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
     }
 
 //    // 根据条件更新
+//    //根据条件更新
 //    public void changeBy(User user, String column, Object val) {
 //        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
 //        userQueryWrapper.eq(column, val);
@@ -143,9 +152,102 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
 //        System.out.println("影响行数：" + num);
 //    }
 
-//    // 通过ID修改信息
+//    //通过ID修改信息
 //    public void changeUserById(User user) {
 //        int num = userMapper.updateById(user);
 //        System.out.println("影响行数：" + num);
 //    }
+
+    @Override
+    public Map commentNotice(HttpServletRequest request) {
+        HashMap<Object, Object> param = new HashMap<>();
+        //获取email
+        String token=request.getHeader("token");
+        String emailData= JwtUtils.parseEmail(token);
+
+
+        QueryWrapper<Dynamic> dynamicQueryWrapper = new QueryWrapper<>();
+        dynamicQueryWrapper.eq("email", emailData)
+                .gt("comment_count",0);
+        //动态记录合集
+        List<Dynamic> data = dynamicMapper.selectList(dynamicQueryWrapper);
+        //  HashMap<Object, Object> peoplecomment=null;
+//         dynamic=null;
+        int j=0;
+        //通过动态表合集查到Comments里的符合条件的对象合集
+        for ( Dynamic did:data){
+            int i=0;
+            j++;
+            Map  info=new HashMap();
+            info.put("dynamic",did);
+            Integer dId =did.getDId();
+            List<Comments> comment= commentsMapper.selectList(new QueryWrapper<Comments>().eq("d_id", dId)
+                                                                   .orderByDesc("comment_date")
+            );
+            //通过评论表中的email查到user表中的head_picture
+            for(Comments comm:comment){
+                i++;
+                HashMap<Object, Object>  peoplecomment= new HashMap<>();
+                peoplecomment.put("comment",comm);
+                String email = comm.getEmail();
+                List user=userMapper.selectList(new QueryWrapper<User>().eq("email",email));
+                peoplecomment.put("user",user);
+                info.put("peopleComment"+i,peoplecomment);
+            }
+            param.put("info"+j,info);
+        }
+       //设置成1
+        UpdateWrapper<Comments> updateWrapper = new UpdateWrapper<>();
+        Comments comments = new Comments();
+        comments.setCommentRead(1);
+        commentsMapper.update(comments,updateWrapper);
+        return param;
+    }
+
+    @Override
+    public Map likeNotice(HttpServletRequest request) {
+
+        HashMap<Object, Object> param = new HashMap<>();
+        //获取email
+        String token=request.getHeader("token");
+        String emailData= JwtUtils.parseEmail(token);
+        QueryWrapper<Dynamic> dynamicQueryWrapper = new QueryWrapper<>();
+        dynamicQueryWrapper.eq("email", emailData)
+                           .gt("likes",0);
+        //动态记录合集
+        List<Dynamic> data = dynamicMapper.selectList(dynamicQueryWrapper);
+        //  HashMap<Object, Object> peoplecomment=null;
+        // dynamic=null;
+        int j=0;
+
+        //通过动态表合集查到Comments里的符合条件的对象合集
+        for ( Dynamic did:data){
+            int i=0;
+            j++;
+            Map  info=new HashMap();
+            info.put("dynamic",did);
+            Integer dId =did.getDId();
+            List<Like> comment= likeMapper.selectList(new QueryWrapper<Like>().eq("d_id", dId)
+                    .orderByDesc("like_date")
+            );
+            //通过like表中的email查到user表中的head_picture
+            for(Like comm:comment){
+                i++;
+                HashMap<Object, Object>  peoplecomment= new HashMap<>();
+                peoplecomment.put("like",comm);
+                String email = comm.getEmail();
+                List user=userMapper.selectList(new QueryWrapper<User>().eq("email",email));
+                peoplecomment.put("user",user);
+                info.put("peopleLike"+i,peoplecomment);
+            }
+            param.put("info"+j,info);
+        }
+        //设置成1
+        UpdateWrapper<Like> updateWrapper = new UpdateWrapper<>();
+        Like comments = new Like();
+        comments.setLikeRead(1);
+        likeMapper.update(comments,updateWrapper);
+        return param;
+
+    }
 }

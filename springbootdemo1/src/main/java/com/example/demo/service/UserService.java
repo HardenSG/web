@@ -26,5 +26,5 @@ public interface UserService extends IService<User> {
   boolean userRepeat(String email);
    Map changeBy(User user, HttpServletRequest request);
     Map selectBy(HttpServletRequest request);
-
+    public  Map selectByemail(String email);
 }

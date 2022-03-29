@@ -139,6 +139,11 @@ public class UserController {
         return userService.selectBy(request);
 
     }
+    //个人资料展示通过email
+    @GetMapping("/user/showDataByemail")
+    public Map showDataByemail(String email){
+        return userService.selectByemail(email);
+    }
 }
 
 

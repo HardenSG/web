@@ -28,6 +28,9 @@ public interface DynamicService extends IService<Dynamic> {
     Map deleteDynamic(HttpServletRequest request,Integer did,String email);
     List getDynamicByFollow(List<Follow> follows,Integer pageNumber);
 
+  Map commentNotice(HttpServletRequest request);
+
+  Map likeNotice(HttpServletRequest request);
 }
 
 
