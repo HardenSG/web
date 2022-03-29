@@ -3,9 +3,7 @@ package com.example.demo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.demo.entity.Comments;
-import com.example.demo.entity.Dynamic;
-import com.example.demo.entity.Like;
+import com.example.demo.entity.*;
 import com.example.demo.mapper.CommentsMapper;
 import com.example.demo.mapper.DynamicMapper;
 import com.example.demo.mapper.LikeMapper;
@@ -15,7 +13,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.demo.entity.User;
+
 import java.sql.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -143,21 +141,8 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
         return records;
     }
 
-//    // 根据条件更新
-//    //根据条件更新
-//    public void changeBy(User user, String column, Object val) {
-//        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-//        userQueryWrapper.eq(column, val);
-//        int num = userMapper.update(user, userQueryWrapper);
-//        System.out.println("影响行数：" + num);
-//    }
 
-//    //通过ID修改信息
-//    public void changeUserById(User user) {
-//        int num = userMapper.updateById(user);
-//        System.out.println("影响行数：" + num);
-//    }
-
+//评论通知
     @Override
     public Map commentNotice(HttpServletRequest request) {
         HashMap<Object, Object> param = new HashMap<>();
@@ -203,7 +188,7 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
         commentsMapper.update(comments,updateWrapper);
         return param;
     }
-
+//点赞通知
     @Override
     public Map likeNotice(HttpServletRequest request) {
 

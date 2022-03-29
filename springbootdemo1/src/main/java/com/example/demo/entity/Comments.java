@@ -41,7 +41,7 @@ import org.springframework.format.annotation.DateTimeFormat;
       @TableId(value = "comment_id", type = IdType.AUTO)
       private Integer commentId;
 
-      private Date commentDate;
+
       private int commentRead;
 
     public Comments(){ }
