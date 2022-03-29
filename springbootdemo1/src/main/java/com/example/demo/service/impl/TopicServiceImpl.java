@@ -6,9 +6,11 @@ import com.example.demo.entity.Topic;
 import com.example.demo.mapper.TopicMapper;
 import com.example.demo.service.TopicService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.demo.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,8 +25,10 @@ import java.util.List;
 public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements TopicService {
     @Autowired
     TopicMapper topicMapper;
+    private static long time = 1000*60*60*24;
     @Override
     public Integer searchTopicId(String content) {
+        Date date = new Date(System.currentTimeMillis());
         QueryWrapper<Topic> topicQueryWrapper = new QueryWrapper<>();
         topicQueryWrapper.eq("content",content);
         Topic topic = topicMapper.selectOne(topicQueryWrapper);
@@ -60,7 +64,8 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     public List getTopicByHotPart() {
         Page<Topic> page = new Page<>(0,10);
         QueryWrapper<Topic> topicQueryWrapper = new QueryWrapper<>();
-        topicQueryWrapper.orderByDesc("hot");
+        topicQueryWrapper.orderByDesc("hot")
+                .between("date", DateUtils.parseDate(new Date(System.currentTimeMillis())),DateUtils.parseDate(new Date(System.currentTimeMillis()+time)));
         Page<Topic> page1 = topicMapper.selectPage(page, topicQueryWrapper);
         return page1.getRecords();
     }
@@ -69,7 +74,8 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     public List getTopicByHotAll() {
         Page<Topic> page = new Page<>(0,100);
         QueryWrapper<Topic> topicQueryWrapper = new QueryWrapper<>();
-        topicQueryWrapper.orderByDesc("hot");
+        topicQueryWrapper.orderByDesc("hot")
+                .between("date", DateUtils.parseDate(new Date(System.currentTimeMillis())),DateUtils.parseDate(new Date(System.currentTimeMillis()+time)));
         Page<Topic> page1 = topicMapper.selectPage(page, topicQueryWrapper);
         return page1.getRecords();
     }

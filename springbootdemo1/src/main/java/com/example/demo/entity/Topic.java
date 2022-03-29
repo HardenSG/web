@@ -33,12 +33,14 @@ import lombok.EqualsAndHashCode;
 
     Date date;
 
-  public Topic(String content, Integer hot, String picture) {
+  public Topic(String content, Integer hot, String picture , Date date) {
     this.content = content;
     this.hot = hot;
     this.picture = picture;
+    this.date = date;
   }
 
   public Topic() {
   }
+
 }

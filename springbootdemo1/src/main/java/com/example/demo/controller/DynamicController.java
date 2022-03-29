@@ -72,9 +72,10 @@ public class DynamicController {
         if(topic!=null){
             dId = topicService.searchTopicId(topic);
             if(dId==null){
+
                 //did为空，话题表添加这条话题
                 try {
-                    topicService.insertTopic(new Topic(topic, 0,UploadUtils.upload(picture[0],session )));
+                    topicService.insertTopic(new Topic(topic, 0,UploadUtils.upload(picture[0],session ),date));
                 } catch (IOException e) {
                     param.put("异常：","添加话题失败");
                 }
@@ -87,7 +88,6 @@ public class DynamicController {
         //进行添加
         int i = dynamicService.insertDynamic1(dynamic);
         //图片添加到动态图片表里
-        int j = 0;
         List pictures = new LinkedList();
         if(picture.length > 0){
             for (MultipartFile photo : picture) {
