@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.entity.*;
-import com.example.demo.mapper.CommentsMapper;
-import com.example.demo.mapper.DynamicMapper;
-import com.example.demo.mapper.LikeMapper;
-import com.example.demo.mapper.UserMapper;
+import com.example.demo.mapper.*;
 import com.example.demo.service.DynamicService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.utils.JwtUtils;
@@ -38,6 +35,9 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
    private UserMapper userMapper;
    @Autowired
    private LikeMapper likeMapper;
+   @Autowired
+   private DynamicPictureMapper dynamicPicture;
+
     @Override
     public int insertDynamic(String email, String content ,String picture, Date date) {
         return dynamicMapper.insertDynamic(email,content,picture,date);
@@ -98,7 +98,7 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
         List<Dynamic> dynamics = dynamicMapper.selectList(dynamicQueryWrapper);
         return dynamics;
     }
-
+     //删除动态
     @Override
     public Map deleteDynamic(HttpServletRequest request, Integer did, String email) {
         HashMap<Object, Object> param = new HashMap<>();
@@ -106,8 +106,12 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
         String token=request.getHeader("token");
         String emaillog= JwtUtils.parseEmail(token);
         if(email.equals(emaillog)){
-            int num=dynamicMapper.delete(new QueryWrapper<Dynamic>().eq("d_id",did));
-            if(num>0){
+            int numDynamic=dynamicMapper.delete(new QueryWrapper<Dynamic>().eq("d_id",did));
+            int likeDynamic=likeMapper.delete(new QueryWrapper<Like>().eq("d_id",did));
+            int commentDynamic=commentsMapper.delete(new QueryWrapper<Comments>().eq("d_id",did));
+            int pictureDynamic=dynamicPicture.delete(new QueryWrapper<DynamicPicture>().eq("d_id",did));
+
+            if(numDynamic>0||likeDynamic>0||commentDynamic>0||pictureDynamic>0){
                 param.put("status",200);
                 param.put("msg","删除成功");
             }else{
