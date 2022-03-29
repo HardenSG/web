@@ -39,6 +39,8 @@ public class DynamicController {
     FollowService followService;
     @Autowired
     BlackListService blackListService;
+    @Autowired
+    DynamicPictureService dynamicPictureService;
 
 
 
@@ -54,8 +56,8 @@ public class DynamicController {
     @GetMapping("/dynamic")
     public Map insertDynamic(HttpSession session,HttpServletRequest request,
                              @RequestParam(value = "message") String message,
-                             @RequestParam(value = "picture",required = false) MultipartFile picture,
-                             @RequestParam(value = "topic",required = false)String topic) {
+                             @RequestParam(value = "picture",required = false) MultipartFile[] picture,
+                             @RequestParam(value = "topic",required = false)String topic)  {
         Map param = new HashMap();
 
         Integer dId = null;
@@ -67,17 +69,6 @@ public class DynamicController {
         //content
         String content = message;
 
-        //picture
-        String photo = null;
-        if(picture!=null) {
-
-            try {
-                photo = UploadUtils.upload(picture, session);
-            } catch (IOException e) {
-                param.put("code", "0");
-                param.put("message", "文件上传失败");
-            }
-        }
         //date
         Date date = new Date(System.currentTimeMillis());
         //topic不为null，则搜索topic表中是否已存在该话题
@@ -85,16 +76,33 @@ public class DynamicController {
             dId = topicService.searchTopicId(topic);
             if(dId==null){
                 //did为空，话题表添加这条话题
-                topicService.insertTopic(new Topic(topic, 0,photo));
+                try {
+                    topicService.insertTopic(new Topic(topic, 0,UploadUtils.upload(picture[0],session )));
+                } catch (IOException e) {
+                    param.put("异常：","添加话题失败");
+                }
                 dId = topicService.searchTopicId(topic);
             }
 
         }
+
         //放进一个dynamic对象里
-        Dynamic dynamic = new Dynamic(email,content,photo,date,dId,content);
+        Dynamic dynamic = new Dynamic(email,content,date,dId,content);
         //进行添加
-        //int i = dynamicService.insertDynamic(email, content, photo, date);
         int i = dynamicService.insertDynamic1(dynamic);
+        //图片添加到动态图片表里
+        if(picture.length > 0){
+            for (MultipartFile photo : picture) {
+                if(!photo.isEmpty()){
+                    try {
+                        String upload = UploadUtils.upload(photo, session);
+                        dynamicPictureService.insertDynamicPicture(new DynamicPicture(null,dynamic.getDId(),upload));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
         if(i !=0) {
             User userByEmail = userService.getUserByEmail(email);
             param.put("topic",topic);

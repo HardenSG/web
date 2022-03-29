@@ -29,7 +29,6 @@ import lombok.EqualsAndHashCode;
 
     private String content;
 
-    private String picture;
 
   public void setLikes(Integer likes) {
     this.likes = likes;
@@ -58,10 +57,9 @@ import lombok.EqualsAndHashCode;
 
     public Dynamic(){ }
 
-    public Dynamic(String email , String conetent, String picture, Date date ,Integer dId, String content){
+    public Dynamic(String email , String conetent,  Date date ,Integer dId, String content){
       this.date = date;
       this.content = conetent;
-      this.picture = picture;
       this.email = email;
       this.content = content;
       this.dId = dId;
