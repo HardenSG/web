@@ -3,17 +3,20 @@ package com.example.demo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.demo.entity.Dynamic;
-import com.example.demo.entity.Follow;
+import com.example.demo.entity.*;
+import com.example.demo.mapper.CommentsMapper;
 import com.example.demo.mapper.DynamicMapper;
+import com.example.demo.mapper.LikeMapper;
+import com.example.demo.service.CommentsService;
 import com.example.demo.service.DynamicService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.demo.entity.Dynamic;
-import com.example.demo.entity.User;
+
 import java.sql.Date;
+import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -32,10 +35,10 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
 
    @Autowired
     private DynamicMapper dynamicMapper;
-    @Override
-    public int insertDynamic(String email, String content ,String picture, Date date) {
-        return dynamicMapper.insertDynamic(email,content,picture,date);
-    }
+   @Autowired
+   private CommentsMapper commentsMapper;
+    @Autowired
+    private LikeMapper likeMapper;
 
     @Override
     public int insertDynamic1(Dynamic dynamic) {
@@ -135,17 +138,37 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
         return records;
     }
 
-//    // 根据条件更新
-//    public void changeBy(User user, String column, Object val) {
-//        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-//        userQueryWrapper.eq(column, val);
-//        int num = userMapper.update(user, userQueryWrapper);
-//        System.out.println("影响行数：" + num);
-//    }
 
-//    // 通过ID修改信息
-//    public void changeUserById(User user) {
-//        int num = userMapper.updateById(user);
-//        System.out.println("影响行数：" + num);
-//    }
+
+    @Override
+    public List<Integer> getDynamicIdByEmail(String email) {
+        QueryWrapper<Dynamic> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("email",email);
+        List<Dynamic> dynamics = dynamicMapper.selectList(queryWrapper);
+        List dynamicIds = new LinkedList();
+        for (Dynamic dynamic:dynamics) {
+            dynamicIds.add(dynamic.getDId());
+        }
+        return dynamicIds;
+    }
+
+    @Override
+    public int noticeCount(String email) {
+        int notices = 0;
+        List<Integer> dIds = getDynamicIdByEmail(email);
+        for (int dId : dIds) {
+            QueryWrapper<Comments> queryWrapper = new QueryWrapper();
+            queryWrapper.eq("comment_read",0)
+                    .eq("d_id",dId);
+            Integer comment = commentsMapper.selectCount(queryWrapper);
+            QueryWrapper<Like> queryWrapper1= new QueryWrapper();
+            queryWrapper1.eq("like_read",0)
+                    .eq("d_id",dId);
+            Integer like = likeMapper.selectCount(queryWrapper1);
+            notices = notices+comment+like;
+        }
+        return notices;
+    }
+
+
 }

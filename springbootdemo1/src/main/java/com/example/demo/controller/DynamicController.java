@@ -221,6 +221,7 @@ public class DynamicController {
         if(i!=0){
             commentCount = commentCount+1;
             int count = dynamicService.updateByColumn("comment_count", commentCount , dId);
+            param.put("email",email);
             param.put("date",date);
             param.put("user",userByEmail);
             param.put("dId",dId);
@@ -356,5 +357,15 @@ public class DynamicController {
         map.put("message", "成功");
         return map;
     }
+
+
+    @GetMapping("/notices")
+    public int returnNotice(HttpServletRequest request){
+        //得到用户email
+        String userEmail = JwtUtils.parseEmail(request.getHeader("token"));
+        return dynamicService.noticeCount(userEmail);
+    }
+
+
 }
 
