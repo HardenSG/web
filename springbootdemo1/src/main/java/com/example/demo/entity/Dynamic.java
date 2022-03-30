@@ -57,12 +57,12 @@ import lombok.EqualsAndHashCode;
 
     public Dynamic(){ }
 
-    public Dynamic(String email , String conetent,  Date date ,Integer dId, String content){
+    public Dynamic(String email , String conetent,  Date date ,Integer tId, String content){
       this.date = date;
       this.content = conetent;
       this.email = email;
       this.content = content;
-      this.dId = dId;
+      this.tId = tId;
     }
 
 

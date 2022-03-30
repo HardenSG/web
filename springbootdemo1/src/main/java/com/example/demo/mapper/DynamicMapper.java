@@ -23,5 +23,4 @@ import java.sql.Date;
 @Repository
 public interface DynamicMapper extends BaseMapper<Dynamic> {
 
-     int insertDynamic(String email,String content, String picture, Date date);
 }
