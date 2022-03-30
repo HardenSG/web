@@ -123,8 +123,8 @@ public class UserController {
 
     //返回加工过的url
     @PostMapping("/user/url")
-    public String url(MultipartFile photo, HttpSession session) throws IOException {
-        return UploadUtils.upload(photo, session);
+    public String url(MultipartFile photo, HttpServletRequest request) throws IOException {
+        return UploadUtils.upload(photo, request);
     }
 
     //个人资料的修改

@@ -43,4 +43,5 @@ import lombok.EqualsAndHashCode;
   public Topic() {
   }
 
+
 }
