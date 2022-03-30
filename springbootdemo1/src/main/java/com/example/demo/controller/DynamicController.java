@@ -50,7 +50,7 @@ public class DynamicController {
      * @param picture 动态图片
      * @return
      */
-    @GetMapping("/dynamic")
+    @PostMapping("/dynamic")
     public Map insertDynamic(HttpSession session,HttpServletRequest request,
                              @RequestParam(value = "message") String message,
                              @RequestParam(value = "picture",required = false) MultipartFile[] picture,
@@ -86,7 +86,7 @@ public class DynamicController {
         //放进一个dynamic对象里
         Dynamic dynamic = new Dynamic(email,content,date,dId,content);
         //进行添加
-        int i = dynamicService.insertDynamic1(dynamic);
+        int i = dynamicService.insertDynamic(dynamic);
         //图片添加到动态图片表里
         List pictures = new LinkedList();
         if(picture.length > 0){
@@ -242,7 +242,7 @@ public class DynamicController {
      * @param
      * @return
      */
-    @PostMapping("/dynamic")
+    @GetMapping("/dynamic")
     public Map dynamicList(@RequestParam("page") int pageNumber ){
         int i = 0;
         Map map = new HashMap();

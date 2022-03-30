@@ -38,15 +38,8 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
    private UserMapper userMapper;
    @Autowired
    private LikeMapper likeMapper;
-    @Override
-    public int insertDynamic(String email, String content ,String picture, Date date) {
-        return dynamicMapper.insertDynamic(email,content,picture,date);
-    }
 
-    @Override
-    public int insertDynamic1(Dynamic dynamic) {
-        return dynamicMapper.insertDynamic1(dynamic);
-    }
+
 
     /**
      * 通过动态id更改某个字段
