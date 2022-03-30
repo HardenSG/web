@@ -25,7 +25,6 @@ public class UploadUtils {
    @Value("${server.port}")
    private static int serverPort;
    public static String upload(MultipartFile photo , HttpServletRequest request) throws IOException {
-      InetAddress inetAddress = InetAddress.getLocalHost();
       //获取上传的文件的文件名
       String fileName = null;
       try {
@@ -45,7 +44,7 @@ public class UploadUtils {
       String finalPath = photoPath + File.separator + fileName;
       //实现上传功能
       photo.transferTo(new File(finalPath));
-      return "http://"+request.getServerName() +":"+request.getServerPort()+"/pictures/"+UploadUtils.serverPort+fileName;
+      return "http://82.157.48.184:5482:8080/pictures/"+fileName;
       //获取上传的文件的文件名
 //      String fileName = null;
 //      try {

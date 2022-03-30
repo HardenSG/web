@@ -18,12 +18,6 @@ import java.util.List;
  * @since 2022-03-15
  */
 public interface DynamicService extends IService<Dynamic> {
-    /**
-     * 添加动态
-     * @param dynamic
-     * @return
-     */
-    int insertDynamic1(Dynamic dynamic);
 
     /**
      * 更新动态字段（点赞数等）

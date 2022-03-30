@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -134,6 +135,37 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
         return records;
     }
 
+
+    @Override
+    public List<Integer> getDynamicIdByEmail(String email) {
+        QueryWrapper<Dynamic> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("email",email);
+        List<Dynamic> dynamics = dynamicMapper.selectList(queryWrapper);
+        List dynamicIds = new LinkedList();
+        for (Dynamic dynamic:dynamics) {
+            dynamicIds.add(dynamic.getDId());
+        }
+        return dynamicIds;
+    }
+
+    @Override
+    public int noticeCount(String email) {
+        int notices = 0;
+        List<Integer> dIds = getDynamicIdByEmail(email);
+        for (int dId : dIds) {
+            QueryWrapper<Comments> queryWrapper = new QueryWrapper();
+            queryWrapper.eq("comment_read",0)
+                    .eq("d_id",dId);
+            Integer comment = commentsMapper.selectCount(queryWrapper);
+            QueryWrapper<Like> queryWrapper1= new QueryWrapper();
+            queryWrapper1.eq("like_read",0)
+                    .eq("d_id",dId);
+            Integer like = likeMapper.selectCount(queryWrapper1);
+            notices = notices+comment+like;
+        }
+        return notices;
+    }
+    
 
 //评论通知
     @Override
