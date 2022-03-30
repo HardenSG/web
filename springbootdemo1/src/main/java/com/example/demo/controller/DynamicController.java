@@ -53,11 +53,11 @@ public class DynamicController {
     @PostMapping("/dynamic")
     public Map insertDynamic(HttpSession session,HttpServletRequest request,
                              @RequestParam(value = "message") String message,
-                             @RequestParam(value = "picture",required = false) MultipartFile[] picture,
+                             @RequestParam(value = "picture",required = false) String[] picture,
                              @RequestParam(value = "topic",required = false)String topic)  {
         Map param = new HashMap();
 
-        Integer dId = null;
+        Integer tId = null;
 
         //email
         String token = request.getHeader("token");
@@ -70,36 +70,24 @@ public class DynamicController {
         Date date = new Date(System.currentTimeMillis());
         //topic不为null，则搜索topic表中是否已存在该话题
         if(topic!=null){
-            dId = topicService.searchTopicId(topic);
-            if(dId==null){
-
+             tId = topicService.searchTopicId(topic);
+            if(tId==null){
                 //did为空，话题表添加这条话题
-                try {
-                    topicService.insertTopic(new Topic(topic, 0,UploadUtils.upload(picture[0],session ),date));
-                } catch (IOException e) {
-                    param.put("异常：","添加话题失败");
-                }
-                dId = topicService.searchTopicId(topic);
+                topicService.insertTopic(new Topic(topic, 0,picture[0],date));
+                tId = topicService.searchTopicId(topic);
             }
         }
 
         //放进一个dynamic对象里
-        Dynamic dynamic = new Dynamic(email,content,date,dId,content);
+        Dynamic dynamic = new Dynamic(email,content,date,tId,content);
         //进行添加
         int i = dynamicService.insertDynamic(dynamic);
         //图片添加到动态图片表里
         List pictures = new LinkedList();
         if(picture.length > 0){
-            for (MultipartFile photo : picture) {
-                if(!photo.isEmpty()){
-                    try {
-                        String upload = UploadUtils.upload(photo, session);
-                        dynamicPictureService.insertDynamicPicture(new DynamicPicture(null,dynamic.getDId(),upload));
-                        pictures.add(upload);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+            for (String photo : picture) {
+                dynamicPictureService.insertDynamicPicture(new DynamicPicture(null,dynamic.getDId(),photo));
+                pictures.add(photo);
             }
         }
         if(i !=0) {
@@ -214,7 +202,6 @@ public class DynamicController {
         //获得现在时间
         Date date = new Date(System.currentTimeMillis());
         //添加信息到comments表
-        //获得点赞用户的信息
         Comments comments = new Comments(dId,email,comment,date);
         int i = commentsService.insertComment(comments);
         //获得当前用户的信息
@@ -233,7 +220,7 @@ public class DynamicController {
             param.put("status","0");
             param.put("msg","评论失败");
         }
-      return param;
+        return param;
     }
 
     /**
