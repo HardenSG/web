@@ -44,7 +44,7 @@ public class UploadUtils {
       String finalPath = photoPath + File.separator + fileName;
       //实现上传功能
       photo.transferTo(new File(finalPath));
-      return "http://82.157.48.184:5482:8080/pictures/"+fileName;
+      return "82.157.48.184:8080/pictures/"+fileName;
       //获取上传的文件的文件名
 //      String fileName = null;
 //      try {
