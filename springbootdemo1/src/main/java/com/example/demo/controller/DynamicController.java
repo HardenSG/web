@@ -44,18 +44,20 @@ public class DynamicController {
 
     /**
      * 添加动态
-     * @param session 保存图片需要
      * @param request token->email
      * @param message 动态内容
-     * @param picture 动态图片
      * @return
      */
     @PostMapping("/dynamic")
-    public Map insertDynamic(HttpSession session,HttpServletRequest request,
+    public Map insertDynamic(HttpServletRequest request,
                              @RequestParam(value = "message") String message,
-                             @RequestParam(value = "picture",required = false) String[] picture,
-                             @RequestParam(value = "topic",required = false)String topic)  {
+                             @RequestParam(value = "picture",required = false) String pictures,
+                             @RequestParam(value = "topic",required = false)String topic,
+                             @RequestParam(value = "pictureNumber") int pictureNumber) {
         Map param = new HashMap();
+
+        //处理picture
+       String[] picture = pictures.split(",");
 
         Integer tId = null;
 
@@ -83,18 +85,18 @@ public class DynamicController {
         //进行添加
         int i = dynamicService.insertDynamic(dynamic);
         //图片添加到动态图片表里
-        List pictures = new LinkedList();
+        List picturess = new LinkedList();
         if(picture.length > 0){
             for (String photo : picture) {
                 dynamicPictureService.insertDynamicPicture(new DynamicPicture(null,dynamic.getDId(),photo));
-                pictures.add(photo);
+                picturess.add(photo);
             }
         }
         if(i !=0) {
             User userByEmail = userService.getUserByEmail(email);
             param.put("topic",topic);
             param.put("dynamic",dynamic);
-            param.put("pictures",pictures );
+            param.put("pictures",picturess );
             param.put("user",userByEmail);
             param.put("status", "200");
             param.put("message","添加成功");
@@ -216,6 +218,7 @@ public class DynamicController {
             param.put("commentCount",commentCount);
             param.put("status","200");
             param.put("msg","评论成功");
+
         }else{
             param.put("status","0");
             param.put("msg","评论失败");
@@ -237,6 +240,12 @@ public class DynamicController {
 
         //得到五条dynamic记录
         List<Dynamic> list = dynamicService.pageList(pageNumber);
+        if(list.size()<5){
+            map.put("message","已经到底啦！");
+        }else {
+            map.put("message","成功");
+        }
+
         for (Dynamic dynamic : list) {
             Map param = new HashMap();
             i++;
@@ -271,7 +280,6 @@ public class DynamicController {
             map.put("info"+i,param);
         }
         map.put("status",200);
-        map.put("message","成功");
         return map;
     }
 
@@ -308,6 +316,8 @@ public class DynamicController {
     public Map likeNotice(HttpServletRequest request) {
         return dynamicService.likeNotice(request);
     }
+
+
     /**
      *关注人的动态
      * @param request
@@ -323,6 +333,12 @@ public class DynamicController {
         //查找动态
         List<Dynamic> list = dynamicService.getDynamicByFollow(follows, pageNumber);
         int i = 0;
+        if(list.size()<5){
+            map.put("message","已经到底啦！");
+        }else {
+            map.put("message","成功");
+        }
+
         for (Dynamic dynamic : list) {
             Map param = new HashMap();
             i++;
@@ -333,28 +349,30 @@ public class DynamicController {
             //拿到发此条动态的user
             User userByEmail = userService.getUserByEmail(email);
             //拿到至多5条评论
-            List<Comments> comments = commentsService.getCommentsIncludeName(commentsService.selectCommentsByDidLimit(dynamic.getDId(), 0, 5));
+            List<Comments> comments = commentsService.getCommentsIncludeName(commentsService.selectCommentsByDidLimit(dynamic.getDId(),0,5));
+            //拿到动态图片
+            List pictures = dynamicPictureService.queryPicure(dynamic.getDId());
             //原创
-            if (dynamic.getOriginalId() == 0) {
+            if (dynamic.getOriginalId()==0){
                 //type:0 说明是原创
-                param.put("dynamicType", "0");
+                param.put("dynamicType","0");
                 //删除
-            } else if (dynamic.getOriginalId() == -2) {
-                param.put("dynamicType", "-2");
+            }else if (dynamic.getOriginalId()==-2){
+                param.put("dynamicType","-2");
                 //转发
-            } else {
-                param.put("dynamicType", "1");
+            }else {
+                param.put("dynamicType","1");
                 User originalUser = userService.getUserByEmail(dynamicService.getDynamic(dynamic.getOriginalId()).getEmail());
-                param.put("originalUser", originalUser);
+                param.put("originalUser",originalUser);
             }
-            param.put("dynamic", dynamic);
-            param.put("user", userByEmail);
-            param.put("comments", comments);
-            param.put("topic", topic);
-            map.put("info" + i, param);
+            param.put("dynamic",dynamic);
+            param.put("pictures",pictures);
+            param.put("user",userByEmail);
+            param.put("comments",comments);
+            param.put("topic",topic);
+            map.put("info"+i,param);
         }
-        map.put("status", 200);
-        map.put("message", "成功");
+        map.put("status",200);
         return map;
     }
 

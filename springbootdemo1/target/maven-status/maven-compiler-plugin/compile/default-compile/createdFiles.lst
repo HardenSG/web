@@ -10,6 +10,7 @@ com\example\demo\service\impl\BlackListServiceImpl.class
 com\example\demo\service\impl\CommentsServiceImpl.class
 com\example\demo\service\impl\DynamicServiceImpl.class
 com\example\demo\utils\JwtUtils.class
+com\example\demo\controller\DynamicPictureController.class
 com\example\demo\mapper\TopicMapper.class
 com\example\demo\entity\DynamicPicture.class
 com\example\demo\service\TopicService.class

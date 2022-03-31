@@ -5,7 +5,7 @@ spring:
       max-file-size: 1000MB  #单个文件的最大上限
       max-request-size: 1000MB #单个请求的文件总大小上限
   datasource:
-    url: jdbc:mysql://82.157.48.184:3306/weibo?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&serverTimezone=GMT%2B8
+    url: jdbc:mysql://82.157.48.184:3306/weibo?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&serverTimezone=GMT%2B8&zeroDateTimeBehavior=convertToNull
     username: weibo
     password: "a2dDDMNe5ZTdkddm"
     driver-class-name: com.mysql.cj.jdbc.Driver
