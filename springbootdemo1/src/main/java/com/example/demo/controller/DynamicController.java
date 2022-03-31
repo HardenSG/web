@@ -160,6 +160,9 @@ public class DynamicController {
         Dynamic dynamic = dynamicService.getDynamic(dId);
         //被转发的动态成为新的动态,并添加
         Dynamic newDynamic = dynamic;
+        newDynamic.setLikes(0);
+        newDynamic.setCommentCount(0);
+        newDynamic.setForwardCount(0);
         //两个属性表明此条动态为转发，原动态id为
         newDynamic.setOriginalId(dId);
         newDynamic.setContent(content);

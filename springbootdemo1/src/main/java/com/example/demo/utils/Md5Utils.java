@@ -3,7 +3,7 @@ package com.example.demo.utils;
 import org.springframework.util.DigestUtils;
 
 public class Md5Utils {
-    private static final String salt = "edg qwerdf win";
+    private static final String salt = "xu&chu";
     public static String getMD5(String password) {
         //  将用户键入的密码与盐进行字符串拼接，
         //  拼接的方式有多种，盐的定义也有多种，自定义即可

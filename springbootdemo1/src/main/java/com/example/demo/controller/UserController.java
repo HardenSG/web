@@ -59,25 +59,18 @@ public class UserController {
     String text = "";
 
     @PostMapping ("/user")
-    //public Map login(@RequestParam("email") String email,@RequestParam("password") String password){
     public Map login(User user){
-//        User user = new User();
-//        user.setEmail(email);
-//        user.setPassword(password);
         Map param = new HashMap<>();
-        User userByEmail = this.userService.getUserByEmailAndPassword(user.getEmail(),user.getPassword());
+        User userByEmail = this.userService.getUserByEmailAndPassword(user.getEmail(),Md5Utils.getMD5(user.getPassword()));
         if(userByEmail==null){
             param.put("status","0");
             param.put("msg","账号密码错误");
-        }else if(userByEmail.getEmail().equals(user.getEmail())&&userByEmail.getPassword().equals(user.getPassword())){
+        }else{
             userByEmail.setToken(JwtUtils.jwt(userByEmail.getEmail(),userByEmail.getPassword()));
             param.put("status","200");
             param.put("msg","登陆成功");
             param.put("user",userByEmail);
             return param;
-        }else {
-            param.put("status","0");
-            param.put("msg","账号密码错误");
         }
         return param;
     }
