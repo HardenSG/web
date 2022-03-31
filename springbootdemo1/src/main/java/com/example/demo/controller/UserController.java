@@ -5,6 +5,7 @@ import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserService;
 import com.example.demo.service.impl.UserServiceImpl;
+import com.example.demo.utils.Md5Utils;
 import com.example.demo.utils.UploadUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -88,12 +89,13 @@ public class UserController {
                       @RequestParam("password") String password,
                       @RequestParam("email") String email,
                       @RequestParam("code") String code) {
+        String md5 = Md5Utils.getMD5(password);
         HashMap param = new HashMap<>();
         if (!text.equals(code)) {
             param.put("status", 0);
             param.put("msg", "验证码不正确");
         } else if (text.equals(code) && userService.userRepeat(email) == true) {
-            usermapper.savaUser(name, password, email);
+            usermapper.savaUser(name, md5, email);
             param.put("status", 200);
             param.put("msg", "注册成功");
         } else {

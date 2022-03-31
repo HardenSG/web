@@ -24,7 +24,7 @@ public interface UserMapper extends BaseMapper<User> {
     User getUserByEmailAndPassword(@Param("email") String email,@Param("password") String password);
     User getUserByEmail(@Param("email") String email);
 @Insert("insert into user(name,password,email) VALUES(#{name},#{password},#{email})")
-   int savaUser(@Param("name") String name,@Param("password") String password,@Param("email")String email);
+   int savaUser(@Param("name") String name,@Param("password") String md5,@Param("email")String email);
 @Select("SELECT email from user where email=#{email}")
    String checkUser(@Param("email")String email);
 }
