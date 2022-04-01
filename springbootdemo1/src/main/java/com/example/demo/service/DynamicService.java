@@ -54,7 +54,7 @@ public interface DynamicService extends IService<Dynamic> {
      * @param tId
      * @return
      */
-    List getDynamicByTopic(int tId);
+    List getDynamicByTopic(int tId , int pageNumber);
 
     /**
      * 删除动态
