@@ -49,7 +49,7 @@ import lombok.EqualsAndHashCode;
 
     private  Integer originalId;
     private  Integer tId ;
-
+    @TableField("forward_comment")
     private String forwardComment;
 
   @TableField(exist=false)

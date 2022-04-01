@@ -73,6 +73,7 @@ private DynamicPictureMapper dynamicPictureMapper;
         return insert;
     }
 
+
     @Override
     public List pageList(int pageNumber) {
         Page<Dynamic> page = new Page<>(pageNumber,5);

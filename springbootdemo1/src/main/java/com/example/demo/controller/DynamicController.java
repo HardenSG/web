@@ -165,12 +165,14 @@ public class DynamicController {
         newDynamic.setForwardCount(0);
         //两个属性表明此条动态为转发，原动态id为
         newDynamic.setOriginalId(dId);
-        newDynamic.setContent(content);
-        int i = dynamicService.insertDynamic(dynamic);
+        newDynamic.setForwardComment(content);
+        newDynamic.setEmail(email);
+        newDynamic.setDate(new Date(System.currentTimeMillis()));
+        int i = dynamicService.insertDynamic(newDynamic);
         if(i!=0){
-            forwardCount = forwardCount+1;
-            int count = dynamicService.updateByColumn("forward_count", forwardCount , dId);
-            map.put("forwardCount",forwardCount);
+            int newforwardCount = forwardCount+1;
+            int count = dynamicService.updateByColumn("forward_count", newforwardCount , dId);
+            map.put("forwardCount",newforwardCount);
             map.put("status","200");
             map.put("msg","转发成功");
         }else {
@@ -262,6 +264,7 @@ public class DynamicController {
             List<Comments> comments = commentsService.getCommentsIncludeName(commentsService.selectCommentsByDidLimit(dynamic.getDId(),0,5));
             //拿到动态图片
             List pictures = dynamicPictureService.queryPicure(dynamic.getDId());
+            param.put("pictures",pictures);
             //原创
             if (dynamic.getOriginalId()==0){
                 //type:0 说明是原创
@@ -274,9 +277,11 @@ public class DynamicController {
                 param.put("dynamicType","1");
                 User originalUser = userService.getUserByEmail(dynamicService.getDynamic(dynamic.getOriginalId()).getEmail());
                 param.put("originalUser",originalUser);
+                List originalPicture = dynamicPictureService.queryPicure(dynamic.getOriginalId());
+                param.put("pictures",originalPicture);
+                param.put("forwardComment",dynamic.getForwardComment());
             }
             param.put("dynamic",dynamic);
-            param.put("pictures",pictures);
             param.put("user",userByEmail);
             param.put("comments",comments);
             param.put("topic",topic);
