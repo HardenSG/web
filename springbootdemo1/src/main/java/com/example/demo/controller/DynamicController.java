@@ -288,49 +288,94 @@ public class DynamicController {
         return map;
     }
 
+//    /**
+//     * 所有评论
+//     * @param dId
+//     * @return
+//     */
+//    @GetMapping ("/dynamic/comment")
+//    public Map getComments(@RequestParam("dId") int dId){
+//        Map param = new HashMap();
+//        //所有评论
+//        List<Comments>comments=commentsService.selectCommentsByDid(dId);
+//        //一级评论
+//        List<Comments> commentOne = commentsService.getCommentOne(dId);
+//        int i=0;
+//        HashMap<Object, Object> commentParent = new HashMap<>();
+//        //遍历一级评论，comment1一条一级评论
+//        for(Comments comment1:commentOne){
+//            int j=0;
+//            i++;
+//            commentParent.put("一级评论"+i,comment1);
+//            //遍历全部评论，comment指不定那条评论
+//            HashMap<Object, Object> commentTwo = new HashMap<>();
+//            for (Comments comment2:comments){
+//                int t=0;
+//                j++;
+//                //指不定那条评论的pid是一级评论的commentID且条件是pid=rid，说明是二级评论不是三级，此if拿到了二级评论
+//                if(comment2.getReplyId()==comment2.getParentId()&&comment2.getParentId()==comment1.getCommentId()){
+//                    commentTwo.put("二级评论"+j,comment2);
+//                    //如果二级评论的commentId是三级评论的rid,一级评论的cId是三级评论的pid
+//                    HashMap<Object, Object> commentThree = new HashMap<>();
+//                    for(Comments comment3:comments){
+//                        if(comment2.getCommentId()==comment3.getReplyId()&&comment1.getCommentId()==comment3.getParentId()){
+//                            commentThree.put("三级评论"+t,comment3);
+//                        }
+//                    }
+//                    commentTwo.put("三级评论",commentThree);
+//                }
+//        }
+//            commentParent.put("二级评论",commentTwo);
+//        }
+//        param.put("一级评论",commentParent);
+//        param.put("status",200);
+//        param.put("msg","评论显示成功");
+//        return param;
+//    }
+
     /**
      * 所有评论
      * @param dId
      * @return
      */
     @GetMapping ("/dynamic/comment")
-    public Map getComments(@RequestParam("dId") int dId){
-        Map param = new HashMap();
-        //所有评论
-        List<Comments>comments=commentsService.selectCommentsByDid(dId);
-        //一级评论
-        List<Comments> commentOne = commentsService.getCommentOne(dId);
-        int i=0;
-        HashMap<Object, Object> commentParent = new HashMap<>();
-        //遍历一级评论，comment1一条一级评论
-        for(Comments comment1:commentOne){
-            int j=0;
+    public Map getComments(@RequestParam("dId") int dId) {
+        Map mapp = new HashMap();
+        int i =0;
+        List<Comments> commentOnes = commentsService.getCommentOne(dId);
+        for(Comments commentone:commentOnes){
             i++;
-            commentParent.put("一级评论"+i,comment1);
-            //遍历全部评论，comment指不定那条评论
-            HashMap<Object, Object> commentTwo = new HashMap<>();
-            for (Comments comment2:comments){
-                int t=0;
-                j++;
-                //指不定那条评论的pid是一级评论的commentID且条件是pid=rid，说明是二级评论不是三级，此if拿到了二级评论
-                if(comment2.getReplyId()==comment2.getParentId()&&comment2.getParentId()==comment1.getCommentId()){
-                    commentTwo.put("二级评论"+j,comment2);
-                    //如果二级评论的commentId是三级评论的rid,一级评论的cId是三级评论的pid
-                    HashMap<Object, Object> commentThree = new HashMap<>();
-                    for(Comments comment3:comments){
-                        if(comment2.getCommentId()==comment3.getReplyId()&&comment1.getCommentId()==comment3.getParentId()){
-                            commentThree.put("三级评论"+t,comment3);
-                        }
-                    }
-                    commentTwo.put("三级评论",commentThree);
+            List<Comments> commentTwos = commentsService.getCommentTwo(dId, commentone.getCommentId());
+            Map map1 = new HashMap();
+            Map comments1 = new HashMap();
+            int k =0;
+            for (Comments commenttwo : commentTwos) {
+                k++;
+                List<Comments> commentThree = commentsService.getCommentThree(dId, commentone.getCommentId(), commenttwo.getCommentId());
+                User usertwo = userService.getUserByEmail(commenttwo.getEmail());
+                Map comments = new HashMap();
+                Map map2 = new HashMap();
+                int j = 0;
+                for (Comments commentthree : commentThree) {
+                    j++;
+                    Map map3 = new HashMap();
+                    User userByEmail = userService.getUserByEmail(commentthree.getEmail());
+                    map3.put("content",commentthree);
+                    map3.put("user",userByEmail);
+                    comments.put("commentThree"+j,map3);
                 }
+                map2.put("comments",comments) ;
+                map2.put("content",commenttwo);
+                map2.put("user",usertwo);
+                comments1.put("commentTwo"+k,map2);
+            }
+            User user = userService.getUserByEmail(commentone.getEmail());
+            map1.put("user",user);
+            map1.put("comments",comments1);
+            map1.put("content",commentone);
+            mapp.put("info"+i,map1);
         }
-            commentParent.put("二级评论",commentTwo);
-        }
-        param.put("一级评论",commentParent);
-        param.put("status",200);
-        param.put("msg","评论显示成功");
-        return param;
+        return mapp;
     }
 
     //删除动态
