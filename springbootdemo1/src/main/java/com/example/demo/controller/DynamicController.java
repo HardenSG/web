@@ -347,30 +347,15 @@ public class DynamicController {
             i++;
             List<Comments> commentTwos = commentsService.getCommentTwo(dId, commentone.getCommentId());
             Map map1 = new HashMap();
-            Map comments1 = new HashMap();
-            int k =0;
+            List comments1 = new LinkedList();
             for (Comments commenttwo : commentTwos) {
-                k++;
+
                 List<Comments> commentThree = commentsService.getCommentThree(dId, commentone.getCommentId(), commenttwo.getCommentId());
-                User usertwo = userService.getUserByEmail(commenttwo.getEmail());
-                Map comments = new HashMap();
                 Map map2 = new HashMap();
-                int j = 0;
-                for (Comments commentthree : commentThree) {
-                    j++;
-                    Map map3 = new HashMap();
-                    User userByEmail = userService.getUserByEmail(commentthree.getEmail());
-                    map3.put("content",commentthree);
-                    map3.put("user",userByEmail);
-                    comments.put("commentThree"+j,map3);
-                }
-                map2.put("comments",comments) ;
+                map2.put("comments",commentThree) ;
                 map2.put("content",commenttwo);
-                map2.put("user",usertwo);
-                comments1.put("commentTwo"+k,map2);
+                comments1.add(map2);
             }
-            User user = userService.getUserByEmail(commentone.getEmail());
-            map1.put("user",user);
             map1.put("comments",comments1);
             map1.put("content",commentone);
             mapp.put("info"+i,map1);
