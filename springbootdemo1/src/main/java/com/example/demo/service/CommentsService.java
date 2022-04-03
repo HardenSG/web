@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Comments;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.demo.entity.User;
 
 import java.util.List;
 
@@ -19,4 +20,8 @@ public interface CommentsService extends IService<Comments> {
     List<Comments> selectCommentsByDid(int dId);
     List<Comments> selectCommentsByDidLimit(int dId , int pageNumber , int pageSize);
     List<Comments> getCommentsIncludeName(List<Comments> comments);
+    List<Comments> getCommentOne(int dId);
+    List<Comments> getCommentTwo(int dId , int commentOneId);
+    List<Comments> getCommentThree(int dId , int commentOneId , int commentTwoId);
+
 }

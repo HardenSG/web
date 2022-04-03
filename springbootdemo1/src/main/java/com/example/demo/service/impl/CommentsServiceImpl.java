@@ -56,6 +56,40 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         List<Comments> comments = commentsMapper.selectList(queryWrapper);
         return comments;
     }
+    //通过did查comments里的一级评论
+    @Override
+    public List<Comments> getCommentOne(int dId) {
+        QueryWrapper<Comments> queryWrapper= new QueryWrapper<>();
+        queryWrapper.eq("d_id",dId)
+                .eq("parent_id",0)
+                .eq("reply_id",0);
+        List<Comments> comments = commentsMapper.selectList(queryWrapper);
+        return comments;
+    }
+
+    //通过did查二级评论
+    @Override
+    public List<Comments> getCommentTwo(int dId,int commentOneId){
+        QueryWrapper<Comments> queryWrapper= new QueryWrapper<>();
+        queryWrapper.eq("d_id",dId)
+                .eq("parent_id",commentOneId)
+                .eq("reply_id",commentOneId);
+        List<Comments> comments = commentsMapper.selectList(queryWrapper);
+        return comments;
+    }
+
+    @Override
+    public List<Comments> getCommentThree(int dId, int commentOneId, int commentTwoId) {
+        QueryWrapper<Comments> queryWrapper= new QueryWrapper<>();
+        queryWrapper.eq("d_id",dId)
+                .eq("parent_id",commentOneId)
+                .eq("reply_id",commentTwoId);
+        List<Comments> comments = commentsMapper.selectList(queryWrapper);
+        return comments;
+    }
+
+
+
     //
     @Override
     public List<Comments> selectCommentsByDidLimit(int dId , int pageNumber , int pageSize) {
@@ -79,5 +113,7 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         }
         return commentsList;
     }
+
+
 
 }

@@ -200,7 +200,10 @@ public class DynamicController {
     public Map comment(@RequestParam("comment") String comment , @RequestParam("dId") int dId ,
                        @RequestParam("commentCount") int commentCount,
                        @RequestParam("dynamicUserEmail") String dynamicUserEmail,
-                       HttpServletRequest request){
+                       HttpServletRequest request,
+                       @RequestParam("commentIdP")int commentIdP,
+                       @RequestParam("commentIdR") int commentIdR
+    ){
 
         Map param = new HashMap();
         //获得用户email
@@ -215,8 +218,10 @@ public class DynamicController {
         //获得现在时间
         Date date = new Date(System.currentTimeMillis());
         //添加信息到comments表
-        Comments comments = new Comments(dId,email,comment,date);
+        Comments comments = new Comments(dId,email,comment,date,commentIdR,commentIdP);
         int i = commentsService.insertComment(comments);
+
+
         //获得当前用户的信息
         User userByEmail = userService.getUserByEmail(email);
         if(i!=0){
@@ -297,19 +302,79 @@ public class DynamicController {
         return map;
     }
 
+//    /**
+//     * 所有评论
+//     * @param dId
+//     * @return
+//     */
+//    @GetMapping ("/dynamic/comment")
+//    public Map getComments(@RequestParam("dId") int dId){
+//        Map param = new HashMap();
+//        //所有评论
+//        List<Comments>comments=commentsService.selectCommentsByDid(dId);
+//        //一级评论
+//        List<Comments> commentOne = commentsService.getCommentOne(dId);
+//        int i=0;
+//        HashMap<Object, Object> commentParent = new HashMap<>();
+//        //遍历一级评论，comment1一条一级评论
+//        for(Comments comment1:commentOne){
+//            int j=0;
+//            i++;
+//            commentParent.put("一级评论"+i,comment1);
+//            //遍历全部评论，comment指不定那条评论
+//            HashMap<Object, Object> commentTwo = new HashMap<>();
+//            for (Comments comment2:comments){
+//                int t=0;
+//                j++;
+//                //指不定那条评论的pid是一级评论的commentID且条件是pid=rid，说明是二级评论不是三级，此if拿到了二级评论
+//                if(comment2.getReplyId()==comment2.getParentId()&&comment2.getParentId()==comment1.getCommentId()){
+//                    commentTwo.put("二级评论"+j,comment2);
+//                    //如果二级评论的commentId是三级评论的rid,一级评论的cId是三级评论的pid
+//                    HashMap<Object, Object> commentThree = new HashMap<>();
+//                    for(Comments comment3:comments){
+//                        if(comment2.getCommentId()==comment3.getReplyId()&&comment1.getCommentId()==comment3.getParentId()){
+//                            commentThree.put("三级评论"+t,comment3);
+//                        }
+//                    }
+//                    commentTwo.put("三级评论",commentThree);
+//                }
+//        }
+//            commentParent.put("二级评论",commentTwo);
+//        }
+//        param.put("一级评论",commentParent);
+//        param.put("status",200);
+//        param.put("msg","评论显示成功");
+//        return param;
+//    }
+
     /**
      * 所有评论
      * @param dId
      * @return
      */
     @GetMapping ("/dynamic/comment")
-    public Map getComments(@RequestParam("dId") int dId){
-        Map param = new HashMap();
-        List<Comments> comments = commentsService.selectCommentsByDid(dId);
-        param.put("comments",comments);
-        param.put("status",200);
-        param.put("msg","评论显示成功");
-        return param;
+    public Map getComments(@RequestParam("dId") int dId) {
+        Map mapp = new HashMap();
+        int i =0;
+        List<Comments> commentOnes = commentsService.getCommentOne(dId);
+        for(Comments commentone:commentOnes){
+            i++;
+            List<Comments> commentTwos = commentsService.getCommentTwo(dId, commentone.getCommentId());
+            Map map1 = new HashMap();
+            List comments1 = new LinkedList();
+            for (Comments commenttwo : commentTwos) {
+
+                List<Comments> commentThree = commentsService.getCommentThree(dId, commentone.getCommentId(), commenttwo.getCommentId());
+                Map map2 = new HashMap();
+                map2.put("comments",commentThree) ;
+                map2.put("content",commenttwo);
+                comments1.add(map2);
+            }
+            map1.put("comments",comments1);
+            map1.put("content",commentone);
+            mapp.put("info"+i,map1);
+        }
+        return mapp;
     }
 
     //删除动态
