@@ -157,9 +157,10 @@ public class DynamicController {
         //获得email
         String email = JwtUtils.parseEmail(request.getHeader("token"));
         //获得被转发的动态
-        Dynamic dynamic = dynamicService.getDynamic(dId);
+        Dynamic newDynamic = dynamicService.getDynamic(dId);
+
+        List<String> list = dynamicPictureService.queryPicure(dId);
         //被转发的动态成为新的动态,并添加
-        Dynamic newDynamic = dynamic;
         newDynamic.setLikes(0);
         newDynamic.setCommentCount(0);
         newDynamic.setForwardCount(0);
@@ -169,6 +170,11 @@ public class DynamicController {
         newDynamic.setEmail(email);
         newDynamic.setDate(new Date(System.currentTimeMillis()));
         int i = dynamicService.insertDynamic(newDynamic);
+        for (String url:list) {
+            DynamicPicture dynamicPicture = new DynamicPicture(null,newDynamic.getDId(),url);
+            dynamicPictureService.insertDynamicPicture(dynamicPicture);
+        }
+
         if(i!=0){
             int newforwardCount = forwardCount+1;
             int count = dynamicService.updateByColumn("forward_count", newforwardCount , dId);
