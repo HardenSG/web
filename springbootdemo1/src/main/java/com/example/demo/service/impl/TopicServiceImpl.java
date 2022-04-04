@@ -42,6 +42,14 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
 
     }
 
+    public Topic searchTopic(String content) {
+        QueryWrapper<Topic> topicQueryWrapper = new QueryWrapper<>();
+        topicQueryWrapper.eq("content",content);
+        Topic topic = topicMapper.selectOne(topicQueryWrapper);
+        return topic;
+    }
+
+
     @Override
     public Integer insertTopic(Topic topic) {
         int insert = topicMapper.insert(topic);
@@ -59,6 +67,7 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
             return null;
         }
     }
+
 
     @Override
     public List getTopicByHotPart() {

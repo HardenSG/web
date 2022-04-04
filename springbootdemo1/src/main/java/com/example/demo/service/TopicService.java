@@ -19,4 +19,5 @@ public interface TopicService extends IService<Topic> {
     String getTopic(Integer tId);
     List getTopicByHotPart();
     List getTopicByHotAll();
+    Topic searchTopic(String content);
 }

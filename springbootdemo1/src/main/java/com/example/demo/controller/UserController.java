@@ -139,6 +139,14 @@ public class UserController {
     public Map showDataByemail(String email){
         return userService.selectByemail(email);
     }
+
+//    /**
+//     * 显示我的
+//     * @return
+//     */
+//    public Map showMyFans(){
+//
+//    }
 }
 
 

@@ -84,12 +84,19 @@ private DynamicPictureMapper dynamicPictureMapper;
         return records;
     }
 
+    /**
+     *
+     * @param tId
+     * @return
+     */
     @Override
-    public List getDynamicByTopic(int tId) {
+    public List getDynamicByTopic(int tId,int pageNumber) {
+        Page<Dynamic> page = new Page<>(pageNumber,5);
         QueryWrapper<Dynamic> dynamicQueryWrapper = new QueryWrapper<>();
         dynamicQueryWrapper.eq("t_id",tId);
-        List<Dynamic> dynamics = dynamicMapper.selectList(dynamicQueryWrapper);
-        return dynamics;
+        Page<Dynamic> dynamicPage = dynamicMapper.selectPage(page, dynamicQueryWrapper);
+        List<Dynamic> records = dynamicPage.getRecords();
+        return records;
     }
 
 
@@ -123,11 +130,12 @@ private DynamicPictureMapper dynamicPictureMapper;
     }
 
 
-
-
-
-
-
+    /**
+     *
+     * @param follows
+     * @param pageNumber
+     * @return
+     */
     @Override
     public List getDynamicByFollow(List<Follow> follows , Integer pageNumber) {
         Page<Dynamic> page = new Page<>(pageNumber,5);
@@ -141,7 +149,11 @@ private DynamicPictureMapper dynamicPictureMapper;
         return records;
     }
 
-
+    /**
+     * 通过用户邮箱获得全部动态id
+     * @param email
+     * @return
+     */
     @Override
     public List<Integer> getDynamicIdByEmail(String email) {
         QueryWrapper<Dynamic> queryWrapper = new QueryWrapper();
@@ -152,6 +164,16 @@ private DynamicPictureMapper dynamicPictureMapper;
             dynamicIds.add(dynamic.getDId());
         }
         return dynamicIds;
+    }
+
+    public List getMyDynamic(String email , int pageNumber){
+        Page<Dynamic> page = new Page<>(pageNumber,5);
+        QueryWrapper<Dynamic> queryWrapper= new QueryWrapper<>();
+        queryWrapper.orderByDesc("date");
+        queryWrapper.eq("email",email);
+        Page<Dynamic> dynamicPage = dynamicMapper.selectPage(page, queryWrapper);
+        List<Dynamic> records = dynamicPage.getRecords();
+        return records;
     }
 
     @Override
