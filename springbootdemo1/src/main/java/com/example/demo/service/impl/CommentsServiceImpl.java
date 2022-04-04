@@ -113,6 +113,16 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         }
         return commentsList;
     }
+    //修改list中的特定字段
+    @Override
+    public void update(List<Comments> comments) {
+        for (Comments comment: comments) {
+            comment.setCommentRead(1);
+            commentsMapper.updateById(comment);
+        }
+    }
+
+
 
 
 

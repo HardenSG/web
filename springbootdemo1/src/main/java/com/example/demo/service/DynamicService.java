@@ -78,6 +78,8 @@ public interface DynamicService extends IService<Dynamic> {
   Map commentNotice(HttpServletRequest request);
 
   Map likeNotice(HttpServletRequest request);
+
+  Map forwardNotice(HttpServletRequest request);
     List getMyDynamic(String email , int pageNumber);
 }
 
