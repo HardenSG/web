@@ -1,12 +1,15 @@
 package com.example.demo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.demo.entity.Comments;
 import com.example.demo.entity.Like;
 import com.example.demo.mapper.LikeMapper;
 import com.example.demo.service.LikeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -39,5 +42,13 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> implements Li
     public int insertLike(Like like) {
         int insert = likeMapper.insert(like);
         return insert;
+    }
+
+    @Override
+    public void update(List<Like> comments) {
+        for (Like comment: comments) {
+            comment.setLikeRead(1);
+            likeMapper.updateById(comment);
+        }
     }
 }

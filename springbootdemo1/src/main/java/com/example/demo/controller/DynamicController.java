@@ -325,7 +325,11 @@ public class DynamicController {
         return dynamicService.likeNotice(request);
     }
 
-
+    //转发通知
+    @GetMapping("/dynamic/forwardNotice")
+    public Map forwardNotice(HttpServletRequest request) {
+        return dynamicService.forwardNotice(request);
+    }
     /**
      *关注人的动态
      * @param request

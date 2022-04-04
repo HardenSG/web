@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Comments;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -13,10 +14,12 @@ import java.util.List;
  * @author Chu
  * @since 2022-03-19
  */
+@Service
 public interface CommentsService extends IService<Comments> {
     int insertComment(Comments comments);
     List<Comments> selectComments(String email);
     List<Comments> selectCommentsByDid(int dId);
     List<Comments> selectCommentsByDidLimit(int dId , int pageNumber , int pageSize);
     List<Comments> getCommentsIncludeName(List<Comments> comments);
+    void update(List<Comments> comments);
 }
