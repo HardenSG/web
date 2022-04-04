@@ -22,6 +22,8 @@ import java.util.List;
 public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> implements FollowService {
     @Autowired
     private FollowMapper followMapper;
+    @Autowired
+    private FollowService followService;
     @Override
     public int insertFollow(String uId, String followId) {
         return followMapper.insert(new Follow(uId,followId));
@@ -55,6 +57,19 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
                 .eq("followed_email",follow.getFollowedEmail());
         int delete = followMapper.delete(queryWrapper);
         return delete;
+    }
+
+    //获得这个人的关注数
+    @Override
+    public int follow(String email) {
+        int count=followService.count(new QueryWrapper<Follow>().eq("u_email",email));
+        return count;
+    }
+    //获得这个人的粉丝数
+    @Override
+    public int fans(String email) {
+        int count=followService.count(new QueryWrapper<Follow>().eq("followed_email",email));
+        return count;
     }
 
 }

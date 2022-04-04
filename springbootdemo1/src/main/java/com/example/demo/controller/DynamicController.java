@@ -20,7 +20,7 @@ import java.util.*;
  * @since 2022-03-15
  */
 @RestController
-
+@ResponseBody
 public class DynamicController {
     @Autowired
     private UserService userService;

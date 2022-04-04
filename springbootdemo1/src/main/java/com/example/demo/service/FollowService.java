@@ -20,5 +20,6 @@ public interface FollowService extends IService<Follow> {
     List getFollowByUserEmail(String userEmail);
     boolean isExist(Follow follow);
     int deleteFollow(Follow follow);
-
+    int follow(String email);
+    int fans(String email);
 }
