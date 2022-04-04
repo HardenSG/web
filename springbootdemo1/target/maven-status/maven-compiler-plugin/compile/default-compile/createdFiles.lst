@@ -35,6 +35,7 @@ com\example\demo\configuration\MybatisPlusConfig.class
 com\example\demo\controller\FollowController.class
 com\example\demo\entity\BlackList.class
 com\example\demo\service\impl\TopicServiceImpl.class
+com\example\demo\utils\Md5Utils.class
 com\example\demo\controller\UserController.class
 com\example\demo\entity\Like.class
 com\example\demo\entity\Dynamic.class

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 
 import com.example.demo.entity.Dynamic;
+import com.example.demo.entity.Topic;
 import com.example.demo.service.DynamicService;
 import com.example.demo.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,25 +31,28 @@ public class TopicController {
     TopicService topicService;
     @Autowired
     DynamicService dynamicService;
-
+    @Autowired
+    DynamicController dynamicController;
     /**
      * 通过话题得到动态内容
      * @param topic
      * @return
      */
     @PostMapping("/topic")
-    public Map getDynamicByTopic(String topic){
+    public Map getDynamicByTopic(String topic , int pageNumber){
         Map param = new HashMap();
+        Topic topic1 = topicService.searchTopic(topic);
         Integer tId = topicService.searchTopicId(topic);
         if(tId==null){
             param.put("status",200);
             param.put("msg","暂无此话题");
             return param;
+        }else{
+            List dynamicByTopic = dynamicService.getDynamicByTopic(tId , pageNumber);
+            dynamicController.showDynamic(dynamicByTopic,param);
+            param.put("topic",topic1);
         }
-        List dynamicByTopic = dynamicService.getDynamicByTopic(tId);
-        param.put("dynamics",dynamicByTopic);
-        param.put("status",200);
-        param.put("msg","成功");
+
         return param;
     }
 
