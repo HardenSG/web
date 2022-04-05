@@ -50,13 +50,6 @@ public interface DynamicService extends IService<Dynamic> {
     List pageList(int pageNumber);
 
     /**
-     * 通过话题返回动态
-     * @param tId
-     * @return
-     */
-    List getDynamicByTopic(int tId , int pageNumber);
-
-    /**
      * 删除动态
      * @param request
      * @param did
@@ -81,6 +74,7 @@ public interface DynamicService extends IService<Dynamic> {
 
   Map forwardNotice(HttpServletRequest request);
     List getMyDynamic(String email , int pageNumber);
+    List getDynamicByTopic(List<Integer> tIds,int pageNumber);
 }
 
 

@@ -95,16 +95,21 @@ private ForwardService forwardService;
         return records;
     }
 
+
+
     /**
      *
-     * @param tId
+     * @param
      * @return
      */
     @Override
-    public List getDynamicByTopic(int tId,int pageNumber) {
+    public List getDynamicByTopic(List<Integer> tIds,int pageNumber) {
         Page<Dynamic> page = new Page<>(pageNumber,5);
         QueryWrapper<Dynamic> dynamicQueryWrapper = new QueryWrapper<>();
-        dynamicQueryWrapper.eq("t_id",tId);
+        for (int tId : tIds) {
+            dynamicQueryWrapper.eq("t_id",tId)
+                    .or();
+        }
         Page<Dynamic> dynamicPage = dynamicMapper.selectPage(page, dynamicQueryWrapper);
         List<Dynamic> records = dynamicPage.getRecords();
         return records;

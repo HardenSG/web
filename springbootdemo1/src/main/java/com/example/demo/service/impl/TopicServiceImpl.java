@@ -10,7 +10,9 @@ import com.example.demo.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.annotation.ElementType;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,26 +28,66 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     @Autowired
     TopicMapper topicMapper;
     private static long time = 1000*60*60*24;
+
+    /**
+     * 根据话题内容模糊搜索话题，并且热度+1
+     * @param content
+     * @return
+     */
     @Override
-    public Integer searchTopicId(String content) {
+    public List<Integer> searchTopicId(String content) {
         Date date = new Date(System.currentTimeMillis());
         QueryWrapper<Topic> topicQueryWrapper = new QueryWrapper<>();
-        topicQueryWrapper.eq("content",content);
-        Topic topic = topicMapper.selectOne(topicQueryWrapper);
+        topicQueryWrapper.like("content",content);
+        QueryWrapper<Topic> topicQueryWrapper2 = new QueryWrapper<>();
+        topicQueryWrapper2.eq("content",content);
+        List<Topic> topics = topicMapper.selectList(topicQueryWrapper);
+        Topic topic2 = topicMapper.selectOne(topicQueryWrapper2);
         try {
-            topic.setHot(topic.getHot()+1);
-            topicMapper.update(topic,topicQueryWrapper);
-            return topic.getTId();
+            topic2.setHot(topic2.getHot()+1);
+            topicMapper.update(topic2,topicQueryWrapper2);
+            List dIds = new LinkedList();
+            for (Topic topic : topics) {
+                dIds.add(topic.getTId());
+            }
+            return dIds;
         } catch (Exception e) {
             return null;
         }
 
     }
 
+
+    public Integer searchTopicIdNoHot(String content) {
+        QueryWrapper<Topic> topicQueryWrapper = new QueryWrapper<>();
+        topicQueryWrapper.eq("content",content);
+        Topic topic = topicMapper.selectOne(topicQueryWrapper);
+        try {
+            return topic.getTId();
+        }catch (Exception e){
+            return null;
+        }
+
+    }
+
+    /**
+     * 搜索话题
+     * @param content
+     * @return
+     */
     public Topic searchTopic(String content) {
         QueryWrapper<Topic> topicQueryWrapper = new QueryWrapper<>();
         topicQueryWrapper.eq("content",content);
         Topic topic = topicMapper.selectOne(topicQueryWrapper);
+        return topic;
+    }
+
+    @Override
+    public List searchTopicList(String content) {
+        QueryWrapper<Topic> topicQueryWrapper = new QueryWrapper<>();
+        topicQueryWrapper.like("content",content)
+                .orderByDesc("hot");
+        List topic = topicMapper.selectList(topicQueryWrapper);
         return topic;
     }
 

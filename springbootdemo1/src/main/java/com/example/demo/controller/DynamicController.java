@@ -76,11 +76,15 @@ public class DynamicController {
         Date date = new Date(System.currentTimeMillis());
         //topic不为null，则搜索topic表中是否已存在该话题
         if(topic!=null){
-             tId = topicService.searchTopicId(topic);
+             tId = topicService.searchTopicIdNoHot(topic);
             if(tId==null){
                 //did为空，话题表添加这条话题
-                topicService.insertTopic(new Topic(topic, 0,picture[0],date));
-                tId = topicService.searchTopicId(topic);
+                try {
+                    topicService.insertTopic(new Topic(topic, 0,picture[0],date));
+                }catch (Exception e){
+                    topicService.insertTopic(new Topic(topic, 0,"82.157.48.184:8080/pictures/e9c2d6ab-6816-40b5-8954-06dcb0161877.jpg",date));
+                }
+                tId = topicService.searchTopicIdNoHot(topic);
             }
         }
 
@@ -162,7 +166,6 @@ public class DynamicController {
         String email = JwtUtils.parseEmail(request.getHeader("token"));
         //获得被转发的动态
         Dynamic newDynamic = dynamicService.getDynamic(dId);
-
         List<String> list = dynamicPictureService.queryPicure(dId);
         //被转发的动态成为新的动态,并添加
         newDynamic.setLikes(0);
@@ -469,6 +472,7 @@ public class DynamicController {
             param.put("dynamicType", "1");
             User originalUser = userService.getUserByEmail(dynamicService.getDynamic(dynamic.getOriginalId()).getEmail());
             param.put("originalUser", originalUser);
+            pictures = dynamicPictureService.queryPicure(dynamic.getOriginalId());
         }
         param.put("dynamic", dynamic);
         param.put("pictures", pictures);

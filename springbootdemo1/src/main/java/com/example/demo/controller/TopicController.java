@@ -41,18 +41,17 @@ public class TopicController {
     @PostMapping("/topic")
     public Map getDynamicByTopic(String topic , int pageNumber){
         Map param = new HashMap();
-        Topic topic1 = topicService.searchTopic(topic);
-        Integer tId = topicService.searchTopicId(topic);
-        if(tId==null){
+        List topic1 = topicService.searchTopicList(topic);
+        List<Integer> list = topicService.searchTopicId(topic);
+        if(list.size()==0){
             param.put("status",200);
             param.put("msg","暂无此话题");
             return param;
         }else{
-            List dynamicByTopic = dynamicService.getDynamicByTopic(tId , pageNumber);
+            List dynamicByTopic = dynamicService.getDynamicByTopic(list , pageNumber);
             dynamicController.showDynamic(dynamicByTopic,param);
-            param.put("topic",topic1);
+            param.put("topic",topic1.get(0));
         }
-
         return param;
     }
 

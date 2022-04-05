@@ -14,10 +14,12 @@ import java.util.List;
  * @since 2022-03-21
  */
 public interface TopicService extends IService<Topic> {
-    Integer searchTopicId(String content);
+    List<Integer> searchTopicId(String content);
     Integer insertTopic(Topic topic);
     String getTopic(Integer tId);
     List getTopicByHotPart();
     List getTopicByHotAll();
     Topic searchTopic(String content);
+    List searchTopicList(String content);
+    Integer searchTopicIdNoHot(String content);
 }
