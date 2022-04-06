@@ -15,7 +15,7 @@ public class AdminWebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")  //所有请求都被拦截包括静态资源
                 //放行的请求 写完了再加OAO
                 .excludePathPatterns("/", "/login", "/css/**", "/fonts/**", "/images/**",
-                        "/js/**","/user"); //放行的请求
+                        "/js/**","/user","/imserver/**"); //放行的请求
 
 
     }

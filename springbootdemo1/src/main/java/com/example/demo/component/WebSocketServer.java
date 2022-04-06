@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author websocket服务
  */
-@ServerEndpoint(value = "/imserver/{username}")
+@ServerEndpoint(value = "/imserver/{email}")
 @Component
 public class WebSocketServer {
 
@@ -32,15 +32,15 @@ public class WebSocketServer {
      * 连接建立成功调用的方法
      */
     @OnOpen
-    public void onOpen(Session session, @PathParam("username") String username) {
-        sessionMap.put(username, session);
-        log.info("有新用户加入，username={}, 当前在线人数为：{}", username, sessionMap.size());
+    public void onOpen(Session session, @PathParam("email") String email) {
+        sessionMap.put(email, session);
+        log.info("有新用户加入，username={}, 当前在线人数为：{}", email, sessionMap.size());
         JSONObject result = new JSONObject();
         JSONArray array = new JSONArray();
         result.put("users", array);
         for (Object key : sessionMap.keySet()) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("username", key);
+            jsonObject.put("email", key);
             // {"username", "zhang", "username": "admin"}
             array.add(jsonObject);
         }
@@ -52,9 +52,9 @@ public class WebSocketServer {
      * 连接关闭调用的方法
      */
     @OnClose
-    public void onClose(Session session, @PathParam("username") String username) {
-        sessionMap.remove(username);
-        log.info("有一连接关闭，移除username={}的用户session, 当前在线人数为：{}", username, sessionMap.size());
+    public void onClose(Session session, @PathParam("email") String email) {
+        sessionMap.remove(email);
+        log.info("有一连接关闭，移除username={}的用户session, 当前在线人数为：{}", email, sessionMap.size());
     }
 
     /**
@@ -65,8 +65,8 @@ public class WebSocketServer {
      * @param message 客户端发送过来的消息
      */
     @OnMessage
-    public void onMessage(String message, Session session, @PathParam("username") String username) {
-        log.info("服务端收到用户username={}的消息:{}", username, message);
+    public void onMessage(String message, Session session, @PathParam("email") String email) {
+        log.info("服务端收到用户username={}的消息:{}", email, message);
         JSONObject obj = JSONUtil.parseObj(message);
         String toUsername = obj.getStr("to"); // to表示发送给哪个用户，比如 admin
         String text = obj.getStr("text"); // 发送的消息文本  hello
@@ -76,7 +76,7 @@ public class WebSocketServer {
             // 服务器端 再把消息组装一下，组装后的消息包含发送人和发送的文本内容
             // {"from": "zhang", "text": "hello"}
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("from", username);  // from 是 zhang
+            jsonObject.put("from", email);  // from 是 zhang
             jsonObject.put("text", text);  // text 同上面的text
             this.sendMessage(jsonObject.toString(), toSession);
             log.info("发送给用户username={}，消息：{}", toUsername, jsonObject.toString());
