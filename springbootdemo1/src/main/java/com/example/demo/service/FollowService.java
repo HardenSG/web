@@ -22,4 +22,5 @@ public interface FollowService extends IService<Follow> {
     int deleteFollow(Follow follow);
     int follow(String email);
     int fans(String email);
+    List getFollowByFollowedEmail(String followedEmail);
 }

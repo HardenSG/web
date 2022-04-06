@@ -72,4 +72,12 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
         return count;
     }
 
+    @Override
+    public List getFollowByFollowedEmail(String followedEmail) {
+        QueryWrapper<Follow> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("followed_email",followedEmail);
+        List<Follow> follows = followMapper.selectList(queryWrapper);
+        return follows;
+    }
+
 }
