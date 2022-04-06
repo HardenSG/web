@@ -46,6 +46,8 @@ import org.springframework.format.annotation.DateTimeFormat;
       private int replyId;
 
       private  int parentId;
+      private  int parentTwoId;
+
 
     public Comments(){ }
 

@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
  */
 public class DateUtils {
     public static String parseDate(Date date){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format.format(date);
     }
 

@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.entity.*;
 import com.example.demo.service.*;
 import com.example.demo.utils.JwtUtils;
@@ -38,6 +39,8 @@ public class DynamicController {
     BlackListService blackListService;
     @Autowired
     DynamicPictureService dynamicPictureService;
+    @Autowired
+    ForwardService forwardService;
 
 
 
@@ -54,7 +57,6 @@ public class DynamicController {
                              @RequestParam(value = "picture",required = false) String pictures,
                              @RequestParam(value = "topic",required = false)String topic) {
         Map param = new HashMap();
-
         //处理picture
         String[] picture = new String[0];
         try {
@@ -177,6 +179,8 @@ public class DynamicController {
         newDynamic.setEmail(email);
         newDynamic.setDate(new Date(System.currentTimeMillis()));
         int i = dynamicService.insertDynamic(newDynamic);
+        //转发表
+        forwardService.insert(new Forward(null,Integer.toString(dId),email,new Date(System.currentTimeMillis()),0));
         for (String url:list) {
             DynamicPicture dynamicPicture = new DynamicPicture(null,newDynamic.getDId(),url);
             dynamicPictureService.insertDynamicPicture(dynamicPicture);
@@ -492,11 +496,27 @@ public class DynamicController {
             Map map1 = new HashMap();
             List comments1 = new LinkedList();
             for (Comments commenttwo : commentTwos) {
+                Map map2 = new HashMap();
                 List<Comments> commentthree = commentsService.getCommentThree(dId, commentone.getCommentId(), commenttwo.getCommentId());
                 List<Comments> commentThree = commentsService.getCommentsIncludeName(commentthree);
+                int j = 0;
+                for (Comments comment3:commentThree) {
+                    j++;
+                    Map map = new HashMap();
+                    Comments commentByCId = commentsService.getCommentByCId(comment3.getReplyId());
+                    String email1 = null;
+                    try {
+                        email1 = commentByCId.getEmail();
+                        User userByEmail1 = userService.getUserByEmail(email1);
+                        map.put("user",userByEmail1);
 
-                Map map2 = new HashMap();
-                map2.put("comments", commentThree);
+                    } catch (Exception e) {
+
+                    }
+                    map.put("comment",comment3);
+                    map2.put("comments"+j, map);
+                }
+
                 map2.put("content", commenttwo);
                 comments1.add(map2);
             }
@@ -505,7 +525,6 @@ public class DynamicController {
             mapp.put("info" + i, map1);
         }
         param.put("commentsAll", mapp);
-
         return param;
     }
 
@@ -517,5 +536,6 @@ public class DynamicController {
         showDynamic(myDynamic,map);
         return map;
     }
+
 }
 

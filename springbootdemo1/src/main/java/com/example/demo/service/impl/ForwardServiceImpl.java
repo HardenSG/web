@@ -1,7 +1,6 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Forward;
-import com.example.demo.entity.Like;
 import com.example.demo.mapper.ForwardMapper;
 import com.example.demo.service.ForwardService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -29,4 +28,11 @@ private ForwardMapper forwardMapper;
             forwardMapper.updateById(comment);
         }
     }
+
+    @Override
+    public int insert(Forward forward) {
+        int insert = forwardMapper.insert(forward);
+        return insert;
+    }
+
 }

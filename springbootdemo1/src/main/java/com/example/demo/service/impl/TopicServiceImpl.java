@@ -2,8 +2,10 @@ package com.example.demo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.demo.entity.Comments;
 import com.example.demo.entity.Topic;
 import com.example.demo.mapper.TopicMapper;
+import com.example.demo.service.CommentsService;
 import com.example.demo.service.TopicService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.utils.DateUtils;
@@ -70,6 +72,8 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
 
     }
 
+
+
     /**
      * 搜索话题
      * @param content
@@ -116,17 +120,16 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         Page<Topic> page = new Page<>(0,10);
         QueryWrapper<Topic> topicQueryWrapper = new QueryWrapper<>();
         topicQueryWrapper.orderByDesc("hot")
-                .between("date", DateUtils.parseDate(new Date(System.currentTimeMillis())),DateUtils.parseDate(new Date(System.currentTimeMillis()+time)));
-        Page<Topic> page1 = topicMapper.selectPage(page, topicQueryWrapper);
+                .between("date", DateUtils.parseDate(new Date(System.currentTimeMillis()-time)),DateUtils.parseDate(new Date(System.currentTimeMillis())));        Page<Topic> page1 = topicMapper.selectPage(page, topicQueryWrapper);
         return page1.getRecords();
     }
 
     @Override
-    public List getTopicByHotAll() {
-        Page<Topic> page = new Page<>(0,100);
+    public List getTopicByHotAll(Integer pageNumber) {
+        Page<Topic> page = new Page<>(pageNumber,5);
         QueryWrapper<Topic> topicQueryWrapper = new QueryWrapper<>();
         topicQueryWrapper.orderByDesc("hot")
-                .between("date", DateUtils.parseDate(new Date(System.currentTimeMillis())),DateUtils.parseDate(new Date(System.currentTimeMillis()+time)));
+                .between("date", DateUtils.parseDate(new Date(System.currentTimeMillis()-time)),DateUtils.parseDate(new Date(System.currentTimeMillis())));
         Page<Topic> page1 = topicMapper.selectPage(page, topicQueryWrapper);
         return page1.getRecords();
     }

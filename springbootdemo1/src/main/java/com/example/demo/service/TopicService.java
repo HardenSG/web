@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Comments;
 import com.example.demo.entity.Topic;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -18,8 +19,9 @@ public interface TopicService extends IService<Topic> {
     Integer insertTopic(Topic topic);
     String getTopic(Integer tId);
     List getTopicByHotPart();
-    List getTopicByHotAll();
+    List getTopicByHotAll(Integer pageNumebr);
     Topic searchTopic(String content);
     List searchTopicList(String content);
     Integer searchTopicIdNoHot(String content);
+
 }

@@ -48,7 +48,12 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         List<Comments> comments = commentsMapper.selectList(queryWrapper);
         return comments;
     }
-    //通过did查comments里的记录
+
+    /**
+     * 通过did查comments里的记录
+     * @param dId
+     * @return
+     */
     @Override
     public List<Comments> selectCommentsByDid(int dId) {
         QueryWrapper<Comments> queryWrapper= new QueryWrapper<>();
@@ -56,13 +61,19 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         List<Comments> comments = commentsMapper.selectList(queryWrapper);
         return comments;
     }
-    //通过did查comments里的一级评论
+
+    /**
+     * 通过did查comments里的一级评论
+     * @param dId
+     * @return
+     */
     @Override
     public List<Comments> getCommentOne(int dId) {
         QueryWrapper<Comments> queryWrapper= new QueryWrapper<>();
         queryWrapper.eq("d_id",dId)
                 .eq("parent_id",0)
-                .eq("reply_id",0);
+                .eq("reply_id",0)
+                .eq("parent_two_id",0);
         List<Comments> comments = commentsMapper.selectList(queryWrapper);
         return comments;
     }
@@ -73,7 +84,8 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         QueryWrapper<Comments> queryWrapper= new QueryWrapper<>();
         queryWrapper.eq("d_id",dId)
                 .eq("parent_id",commentOneId)
-                .eq("reply_id",commentOneId);
+                .eq("reply_id",0)
+                .eq("parent_two_id",0);
         List<Comments> comments = commentsMapper.selectList(queryWrapper);
         return comments;
     }
@@ -83,11 +95,18 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         QueryWrapper<Comments> queryWrapper= new QueryWrapper<>();
         queryWrapper.eq("d_id",dId)
                 .eq("parent_id",commentOneId)
-                .eq("reply_id",commentTwoId);
+                .eq("parent_two_id",commentTwoId);
         List<Comments> comments = commentsMapper.selectList(queryWrapper);
         return comments;
     }
+    @Override
+    public Comments getCommentByCId(int cId) {
+        QueryWrapper<Comments> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("comment_id",cId);
+        Comments comments = commentsMapper.selectOne(queryWrapper);
+        return comments;
 
+    }
 
 
     //

@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Forward;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.demo.entity.Like;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,4 +17,5 @@ import java.util.List;
 @Service
 public interface ForwardService extends IService<Forward> {
     void update(List<Forward> comments);
+    int insert(Forward forward);
 }

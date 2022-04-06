@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -28,9 +30,15 @@ import lombok.EqualsAndHashCode;
 
     private String email;
 
-    private LocalDateTime forwardDate;
+    private Date forwardDate;
 
     private Integer forwardRead;
 
-
+  public Forward(Integer forwardId, String dId, String email, Date forwardDate, Integer forwardRead) {
+    this.forwardId = forwardId;
+    this.dId = dId;
+    this.email = email;
+    this.forwardDate = forwardDate;
+    this.forwardRead = forwardRead;
+  }
 }
