@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.entity.Follow;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
+import com.example.demo.service.FollowService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.impl.UserServiceImpl;
 import com.example.demo.utils.Md5Utils;
@@ -56,6 +58,9 @@ public class UserController {
 
     @Autowired
     JavaMailSenderImpl mailSender;
+
+    @Autowired
+            private FollowService followService;
     String text = "";
 
     @PostMapping ("/user")
@@ -138,6 +143,59 @@ public class UserController {
     @GetMapping("/user/showDataByemail")
     public Map showDataByemail(String email){
         return userService.selectByemail(email);
+    }
+
+    /**
+     * 显示我的
+     * @return
+     */
+    @GetMapping("/user/showMyFollow")
+    public List showMyFollow(String email){
+        List<Follow> followByUserEmail = followService.getFollowByUserEmail(email);
+        List list = new LinkedList();
+
+        for (Follow follow : followByUserEmail) {
+            Map map = new HashMap();
+            String followedEmail = follow.getFollowedEmail();
+            User userByEmail = userService.getUserByEmail(followedEmail);
+            String headPicture = null;
+            String introduction = null;
+            try {
+                headPicture = userByEmail.getHeadPicture();
+                introduction = userByEmail.getIntroduction();
+            } catch (Exception e){
+
+            }
+            map.put("email",followedEmail);
+            map.put("headPicture",headPicture);
+            map.put("introduction",introduction);
+            list.add(map);
+        }
+        return list;
+    }
+
+    @GetMapping("/user/showMyFans")
+    public List showMyFans(String email){
+        List<Follow> followByUserEmail = followService.getFollowByFollowedEmail(email);
+        List list = new LinkedList();
+        for (Follow follow : followByUserEmail) {
+            Map map = new HashMap();
+            String fansEmail = follow.getUEmail();
+            User userByEmail = userService.getUserByEmail(fansEmail);
+            String headPicture = null;
+            String introduction = null;
+            try {
+                headPicture = userByEmail.getHeadPicture();
+                introduction = userByEmail.getIntroduction();
+            } catch (Exception e){
+
+            }
+            map.put("email",fansEmail);
+            map.put("headPicture",headPicture);
+            map.put("introduction",introduction);
+            list.add(map);
+        }
+        return list;
     }
 }
 

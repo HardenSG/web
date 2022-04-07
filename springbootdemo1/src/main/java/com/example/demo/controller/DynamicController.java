@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.entity.*;
 import com.example.demo.service.*;
 import com.example.demo.utils.JwtUtils;
@@ -20,7 +21,7 @@ import java.util.*;
  * @since 2022-03-15
  */
 @RestController
-
+@ResponseBody
 public class DynamicController {
     @Autowired
     private UserService userService;
@@ -38,6 +39,8 @@ public class DynamicController {
     BlackListService blackListService;
     @Autowired
     DynamicPictureService dynamicPictureService;
+    @Autowired
+    ForwardService forwardService;
 
 
 
@@ -52,12 +55,15 @@ public class DynamicController {
     public Map insertDynamic(HttpServletRequest request,
                              @RequestParam(value = "message") String message,
                              @RequestParam(value = "picture",required = false) String pictures,
-                             @RequestParam(value = "topic",required = false)String topic,
-                             @RequestParam(value = "pictureNumber") int pictureNumber) {
+                             @RequestParam(value = "topic",required = false)String topic) {
         Map param = new HashMap();
-
         //处理picture
-       String[] picture = pictures.split(",");
+        String[] picture = new String[0];
+        try {
+            picture = pictures.split(",");
+        } catch (Exception e) {
+
+        }
 
         Integer tId = null;
 
@@ -72,11 +78,15 @@ public class DynamicController {
         Date date = new Date(System.currentTimeMillis());
         //topic不为null，则搜索topic表中是否已存在该话题
         if(topic!=null){
-             tId = topicService.searchTopicId(topic);
+             tId = topicService.searchTopicIdNoHot(topic);
             if(tId==null){
                 //did为空，话题表添加这条话题
-                topicService.insertTopic(new Topic(topic, 0,picture[0],date));
-                tId = topicService.searchTopicId(topic);
+                try {
+                    topicService.insertTopic(new Topic(topic, 0,picture[0],date));
+                }catch (Exception e){
+                    topicService.insertTopic(new Topic(topic, 0,"82.157.48.184:8080/pictures/e9c2d6ab-6816-40b5-8954-06dcb0161877.jpg",date));
+                }
+                tId = topicService.searchTopicIdNoHot(topic);
             }
         }
 
@@ -157,9 +167,9 @@ public class DynamicController {
         //获得email
         String email = JwtUtils.parseEmail(request.getHeader("token"));
         //获得被转发的动态
-        Dynamic dynamic = dynamicService.getDynamic(dId);
+        Dynamic newDynamic = dynamicService.getDynamic(dId);
+        List<String> list = dynamicPictureService.queryPicure(dId);
         //被转发的动态成为新的动态,并添加
-        Dynamic newDynamic = dynamic;
         newDynamic.setLikes(0);
         newDynamic.setCommentCount(0);
         newDynamic.setForwardCount(0);
@@ -169,6 +179,13 @@ public class DynamicController {
         newDynamic.setEmail(email);
         newDynamic.setDate(new Date(System.currentTimeMillis()));
         int i = dynamicService.insertDynamic(newDynamic);
+        //转发表
+        forwardService.insert(new Forward(null,Integer.toString(dId),email,new Date(System.currentTimeMillis()),0));
+        for (String url:list) {
+            DynamicPicture dynamicPicture = new DynamicPicture(null,newDynamic.getDId(),url);
+            dynamicPictureService.insertDynamicPicture(dynamicPicture);
+        }
+
         if(i!=0){
             int newforwardCount = forwardCount+1;
             int count = dynamicService.updateByColumn("forward_count", newforwardCount , dId);
@@ -194,7 +211,10 @@ public class DynamicController {
     public Map comment(@RequestParam("comment") String comment , @RequestParam("dId") int dId ,
                        @RequestParam("commentCount") int commentCount,
                        @RequestParam("dynamicUserEmail") String dynamicUserEmail,
-                       HttpServletRequest request){
+                       HttpServletRequest request,
+                       @RequestParam("commentIdP")int commentIdP,
+                       @RequestParam("commentIdR") int commentIdR
+    ){
 
         Map param = new HashMap();
         //获得用户email
@@ -209,8 +229,10 @@ public class DynamicController {
         //获得现在时间
         Date date = new Date(System.currentTimeMillis());
         //添加信息到comments表
-        Comments comments = new Comments(dId,email,comment,date);
+        Comments comments = new Comments(dId,email,comment,date,commentIdR,commentIdP);
         int i = commentsService.insertComment(comments);
+
+
         //获得当前用户的信息
         User userByEmail = userService.getUserByEmail(email);
         if(i!=0){
@@ -239,18 +261,20 @@ public class DynamicController {
      */
     @GetMapping("/dynamic")
     public Map dynamicList(@RequestParam("page") int pageNumber ){
-        int i = 0;
-        Map map = new HashMap();
-        //存放一条数据的map
 
+        Map map = new HashMap();
         //得到五条dynamic记录
         List<Dynamic> list = dynamicService.pageList(pageNumber);
+        showDynamic(list,map);
+        return map;
+    }
+    public void showDynamic(List<Dynamic>list ,Map map){
+        int i = 0;
         if(list.size()<5){
             map.put("message","已经到底啦！");
         }else {
             map.put("message","成功");
         }
-
         for (Dynamic dynamic : list) {
             Map param = new HashMap();
             i++;
@@ -260,8 +284,6 @@ public class DynamicController {
             String email = dynamic.getEmail();
             //拿到发此条动态的user
             User userByEmail = userService.getUserByEmail(email);
-            //拿到至多5条评论
-            List<Comments> comments = commentsService.getCommentsIncludeName(commentsService.selectCommentsByDidLimit(dynamic.getDId(),0,5));
             //拿到动态图片
             List pictures = dynamicPictureService.queryPicure(dynamic.getDId());
             param.put("pictures",pictures);
@@ -269,10 +291,10 @@ public class DynamicController {
             if (dynamic.getOriginalId()==0){
                 //type:0 说明是原创
                 param.put("dynamicType","0");
-            //删除
+                //删除
             }else if (dynamic.getOriginalId()==-2){
                 param.put("dynamicType","-2");
-            //转发
+                //转发
             }else {
                 param.put("dynamicType","1");
                 User originalUser = userService.getUserByEmail(dynamicService.getDynamic(dynamic.getOriginalId()).getEmail());
@@ -283,28 +305,57 @@ public class DynamicController {
             }
             param.put("dynamic",dynamic);
             param.put("user",userByEmail);
-            param.put("comments",comments);
             param.put("topic",topic);
             map.put("info"+i,param);
         }
         map.put("status",200);
-        return map;
     }
 
-    /**
-     * 所有评论
-     * @param dId
-     * @return
-     */
-    @GetMapping ("/dynamic/comment")
-    public Map getComments(@RequestParam("dId") int dId){
-        Map param = new HashMap();
-        List<Comments> comments = commentsService.selectCommentsByDid(dId);
-        param.put("comments",comments);
-        param.put("status",200);
-        param.put("msg","评论显示成功");
-        return param;
-    }
+//    /**
+//     * 所有评论
+//     * @param dId
+//     * @return
+//     */
+//    @GetMapping ("/dynamic/comment")
+//    public Map getComments(@RequestParam("dId") int dId){
+//        Map param = new HashMap();
+//        //所有评论
+//        List<Comments>comments=commentsService.selectCommentsByDid(dId);
+//        //一级评论
+//        List<Comments> commentOne = commentsService.getCommentOne(dId);
+//        int i=0;
+//        HashMap<Object, Object> commentParent = new HashMap<>();
+//        //遍历一级评论，comment1一条一级评论
+//        for(Comments comment1:commentOne){
+//            int j=0;
+//            i++;
+//            commentParent.put("一级评论"+i,comment1);
+//            //遍历全部评论，comment指不定那条评论
+//            HashMap<Object, Object> commentTwo = new HashMap<>();
+//            for (Comments comment2:comments){
+//                int t=0;
+//                j++;
+//                //指不定那条评论的pid是一级评论的commentID且条件是pid=rid，说明是二级评论不是三级，此if拿到了二级评论
+//                if(comment2.getReplyId()==comment2.getParentId()&&comment2.getParentId()==comment1.getCommentId()){
+//                    commentTwo.put("二级评论"+j,comment2);
+//                    //如果二级评论的commentId是三级评论的rid,一级评论的cId是三级评论的pid
+//                    HashMap<Object, Object> commentThree = new HashMap<>();
+//                    for(Comments comment3:comments){
+//                        if(comment2.getCommentId()==comment3.getReplyId()&&comment1.getCommentId()==comment3.getParentId()){
+//                            commentThree.put("三级评论"+t,comment3);
+//                        }
+//                    }
+//                    commentTwo.put("三级评论",commentThree);
+//                }
+//        }
+//            commentParent.put("二级评论",commentTwo);
+//        }
+//        param.put("一级评论",commentParent);
+//        param.put("status",200);
+//        param.put("msg","评论显示成功");
+//        return param;
+//    }
+
 
     //删除动态
     @DeleteMapping("dynamic/delete")
@@ -325,7 +376,11 @@ public class DynamicController {
         return dynamicService.likeNotice(request);
     }
 
-
+    //转发通知
+    @GetMapping("/dynamic/forwardNotice")
+    public Map forwardNotice(HttpServletRequest request) {
+        return dynamicService.forwardNotice(request);
+    }
     /**
      *关注人的动态
      * @param request
@@ -338,53 +393,21 @@ public class DynamicController {
         String userEmail = JwtUtils.parseEmail(request.getHeader("token"));
         //得到关注表对象
         List<Follow> follows = followService.getFollowByUserEmail(userEmail);
-        //查找动态
-        List<Dynamic> list = dynamicService.getDynamicByFollow(follows, pageNumber);
-        int i = 0;
-        if(list.size()<5){
-            map.put("message","已经到底啦！");
+        if(follows.size()!=0) {
+            //查找动态
+            List<Dynamic> list = dynamicService.getDynamicByFollow(follows, pageNumber);
+            showDynamic(list, map);
         }else {
-            map.put("message","成功");
+            map.put("status",200);
+            map.put("message","您还没有关注任何人哦:(");
         }
-
-        for (Dynamic dynamic : list) {
-            Map param = new HashMap();
-            i++;
-            //拿到动态的话题
-            String topic = topicService.getTopic(dynamic.getTId());
-            //拿到发动态的人的email
-            String email = dynamic.getEmail();
-            //拿到发此条动态的user
-            User userByEmail = userService.getUserByEmail(email);
-            //拿到至多5条评论
-            List<Comments> comments = commentsService.getCommentsIncludeName(commentsService.selectCommentsByDidLimit(dynamic.getDId(),0,5));
-            //拿到动态图片
-            List pictures = dynamicPictureService.queryPicure(dynamic.getDId());
-            //原创
-            if (dynamic.getOriginalId()==0){
-                //type:0 说明是原创
-                param.put("dynamicType","0");
-                //删除
-            }else if (dynamic.getOriginalId()==-2){
-                param.put("dynamicType","-2");
-                //转发
-            }else {
-                param.put("dynamicType","1");
-                User originalUser = userService.getUserByEmail(dynamicService.getDynamic(dynamic.getOriginalId()).getEmail());
-                param.put("originalUser",originalUser);
-            }
-            param.put("dynamic",dynamic);
-            param.put("pictures",pictures);
-            param.put("user",userByEmail);
-            param.put("comments",comments);
-            param.put("topic",topic);
-            map.put("info"+i,param);
-        }
-        map.put("status",200);
         return map;
     }
 
-
+    /**
+     * 获得全部未读消息数
+     * @return
+     */
     @GetMapping("/notices")
     public int returnNotice(HttpServletRequest request){
         //得到用户email
@@ -392,6 +415,124 @@ public class DynamicController {
         return dynamicService.noticeCount(userEmail);
     }
 
+
+    @GetMapping
+    public Map getDynamicOne(){
+        Map map = new HashMap();
+        return map;
+    }
+
+    /**
+     * 所有评论
+     * @param dId
+     * @return
+     */
+    @GetMapping ("/dynamic/comment")
+    public Map getComments(@RequestParam("dId") int dId) {
+        Map mapp = new HashMap();
+        int i =0;
+        List<Comments> commentOnes = commentsService.getCommentOne(dId);
+        for(Comments commentone:commentOnes){
+            i++;
+            List<Comments> commentTwos = commentsService.getCommentTwo(dId, commentone.getCommentId());
+            Map map1 = new HashMap();
+            List comments1 = new LinkedList();
+            for (Comments commenttwo : commentTwos) {
+
+                List<Comments> commentThree = commentsService.getCommentThree(dId, commentone.getCommentId(), commenttwo.getCommentId());
+                Map map2 = new HashMap();
+                map2.put("comments",commentThree) ;
+                map2.put("content",commenttwo);
+                comments1.add(map2);
+            }
+            map1.put("comments",comments1);
+            map1.put("content",commentone);
+            mapp.put("info"+i,map1);
+        }
+        return mapp;
+    }
+    @GetMapping("dynamic/details")
+    public  Map dynamciDetails(int dId) {
+
+        Dynamic dynamic = dynamicService.getDynamic(dId);
+        Map param = new HashMap();
+        //拿到动态的话题
+        String topic = topicService.getTopic(dynamic.getTId());
+        //拿到发动态的人的email
+        String email = dynamic.getEmail();
+        //拿到发此条动态的user
+        User userByEmail = userService.getUserByEmail(email);
+        //拿到动态图片
+        List pictures = dynamicPictureService.queryPicure(dynamic.getDId());
+        //原创
+        if (dynamic.getOriginalId() == 0) {
+            //type:0 说明是原创
+            param.put("dynamicType", "0");
+            //删除
+        } else if (dynamic.getOriginalId() == -2) {
+            param.put("dynamicType", "-2");
+            //转发
+        } else {
+            param.put("dynamicType", "1");
+            User originalUser = userService.getUserByEmail(dynamicService.getDynamic(dynamic.getOriginalId()).getEmail());
+            param.put("originalUser", originalUser);
+            pictures = dynamicPictureService.queryPicure(dynamic.getOriginalId());
+        }
+        param.put("dynamic", dynamic);
+        param.put("pictures", pictures);
+        param.put("user", userByEmail);
+        param.put("topic", topic);
+
+
+        List mapp = new LinkedList();
+        List<Comments> commentones = commentsService.getCommentOne(dId);
+        List<Comments> commentOnes = commentsService.getCommentsIncludeName(commentones);
+
+        for (Comments commentone : commentOnes) {
+            List<Comments> commenttwos = commentsService.getCommentTwo(dId, commentone.getCommentId());
+            List<Comments> commentTwos = commentsService.getCommentsIncludeName(commenttwos);
+            Map map1 = new HashMap();
+            List comments1 = new LinkedList();
+            for (Comments commenttwo : commentTwos) {
+                Map map2 = new HashMap();
+                List map12 = new LinkedList();
+                List<Comments> commentthree = commentsService.getCommentThree(dId, commentone.getCommentId(), commenttwo.getCommentId());
+                List<Comments> commentThree = commentsService.getCommentsIncludeName(commentthree);
+                for (Comments comment3:commentThree) {
+                    Map map = new HashMap();
+                    Comments commentByCId = commentsService.getCommentByCId(comment3.getReplyId());
+                    String email1 = null;
+                    try {
+                        email1 = commentByCId.getEmail();
+                        User userByEmail1 = userService.getUserByEmail(email1);
+                        map.put("user",userByEmail1);
+
+                    } catch (Exception e) {
+
+                    }
+                    map.put("comment",comment3);
+                    map12.add( map);
+                }
+                map2.put("comments",map12);
+                map2.put("content", commenttwo);
+                comments1.add(map2);
+            }
+            map1.put("comments", comments1);
+            map1.put("content", commentone);
+            mapp.add( map1);
+        }
+        param.put("commentsAll", mapp);
+        return param;
+    }
+
+
+    @GetMapping("dynamic/my")
+    public Map myDynamic(String email , int pageNumber){
+        Map map = new HashMap();
+        List<Dynamic> myDynamic = dynamicService.getMyDynamic(email, pageNumber);
+        showDynamic(myDynamic,map);
+        return map;
+    }
 
 }
 

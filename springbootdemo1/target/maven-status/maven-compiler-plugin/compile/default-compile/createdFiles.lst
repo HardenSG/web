@@ -7,9 +7,11 @@ com\example\demo\service\UserService.class
 com\example\demo\service\LikeService.class
 com\example\demo\service\FollowService.class
 com\example\demo\service\impl\BlackListServiceImpl.class
+com\example\demo\service\impl\ForwardServiceImpl.class
 com\example\demo\service\impl\CommentsServiceImpl.class
 com\example\demo\service\impl\DynamicServiceImpl.class
 com\example\demo\utils\JwtUtils.class
+com\example\demo\mapper\ForwardMapper.class
 com\example\demo\controller\DynamicPictureController.class
 com\example\demo\mapper\TopicMapper.class
 com\example\demo\entity\DynamicPicture.class
@@ -20,6 +22,7 @@ com\example\demo\entity\Topic.class
 com\example\demo\interceptor\LoginInterceptor.class
 com\example\demo\mapper\BlackListMapper.class
 com\example\demo\utils\UploadUtils.class
+com\example\demo\entity\Forward.class
 com\example\demo\mapper\DynamicPictureMapper.class
 com\example\demo\configuration\AdminWebConfig.class
 com\example\demo\DemoApplication.class
@@ -34,6 +37,7 @@ com\example\demo\mapper\FollowMapper.class
 com\example\demo\configuration\MybatisPlusConfig.class
 com\example\demo\controller\FollowController.class
 com\example\demo\entity\BlackList.class
+com\example\demo\service\ForwardService.class
 com\example\demo\service\impl\TopicServiceImpl.class
 com\example\demo\utils\Md5Utils.class
 com\example\demo\controller\UserController.class
