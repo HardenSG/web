@@ -270,74 +270,7 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
     }
 
 
-//    @Override
-//    public int noticeCount(String email) {
-//        int notices = 0;
-//        List<Integer> dIds = getDynamicIdByEmail(email);
-//        for (int dId : dIds) {
-//            QueryWrapper<Comments> queryWrapper = new QueryWrapper();
-//            queryWrapper.eq("comment_read",0)
-//                    .eq("d_id",dId);
-//            Integer comment = commentsMapper.selectCount(queryWrapper);
-//            QueryWrapper<Like> queryWrapper1= new QueryWrapper();
-//            queryWrapper1.eq("like_read",0)
-//                    .eq("d_id",dId);
-//            Integer like = likeMapper.selectCount(queryWrapper1);
-//            notices = notices+comment+like;
-//        }
-//        return notices;
-//    }
-//
 
-//评论通知
-//    @Override
-//    public Map commentNotice(HttpServletRequest request) {
-//        HashMap<Object, Object> param = new HashMap<>();
-//        //获取email
-//        String token = request.getHeader("token");
-//        String emailData = JwtUtils.parseEmail(token);
-//
-//        QueryWrapper<Dynamic> dynamicQueryWrapper = new QueryWrapper<>();
-//        dynamicQueryWrapper.eq("email", emailData)
-//                .gt("comment_count", 0);
-//        //动态记录合集
-//        List<Dynamic> data = dynamicMapper.selectList(dynamicQueryWrapper);
-//
-//        int j = 0;
-//        //通过动态表合集查到Comments里的符合条件的对象合集
-//        for (Dynamic did : data) {
-//            int i = 0;
-//            j++;
-//
-//            Map info = new HashMap();
-//            Integer dId = did.getDId();
-//            List<Comments> comment = commentsMapper.selectList(new QueryWrapper<Comments>().eq("d_id", dId)
-//                                               .orderByDesc("comment_date")
-//                                               .eq("comment_read", 0)
-//            );
-//            List picture=dynamicPictureService.queryPicure(dId);
-//            //把这个comment的Read值变成1
-//            commentsService.update(comment);
-//            //如果有未读的才把这条动态放进map
-//            if (comment.size() > 0) {
-//                info.put("dynamic", did);
-//                //通过评论表中的email查到user表中的head_picture
-//                for (Comments comm : comment) {
-//                    i++;
-//                    HashMap<Object, Object> peoplecomment = new HashMap<>();
-//                    peoplecomment.put("comment", comm);
-//                    String email = comm.getEmail();
-//                    List user = userMapper.selectList(new QueryWrapper<User>().eq("email", email));
-//                    peoplecomment.put("user", user);
-//                    info.put("peopleComment" + i, peoplecomment);
-//
-//                }
-//                param.put("info" + j, info);
-//            }
-//        }
-//
-//            return param;
-//        }
     @Override
     public List commentNotice(HttpServletRequest request) {
         ArrayList<Object> param = new ArrayList<>();
