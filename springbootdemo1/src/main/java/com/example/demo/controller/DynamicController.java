@@ -484,24 +484,21 @@ public class DynamicController {
         param.put("topic", topic);
 
 
-        Map mapp = new HashMap();
-        int i = 0;
+        List mapp = new LinkedList();
         List<Comments> commentones = commentsService.getCommentOne(dId);
         List<Comments> commentOnes = commentsService.getCommentsIncludeName(commentones);
 
         for (Comments commentone : commentOnes) {
-            i++;
             List<Comments> commenttwos = commentsService.getCommentTwo(dId, commentone.getCommentId());
             List<Comments> commentTwos = commentsService.getCommentsIncludeName(commenttwos);
             Map map1 = new HashMap();
             List comments1 = new LinkedList();
             for (Comments commenttwo : commentTwos) {
                 Map map2 = new HashMap();
+                List map12 = new LinkedList();
                 List<Comments> commentthree = commentsService.getCommentThree(dId, commentone.getCommentId(), commenttwo.getCommentId());
                 List<Comments> commentThree = commentsService.getCommentsIncludeName(commentthree);
-                int j = 0;
                 for (Comments comment3:commentThree) {
-                    j++;
                     Map map = new HashMap();
                     Comments commentByCId = commentsService.getCommentByCId(comment3.getReplyId());
                     String email1 = null;
@@ -514,15 +511,15 @@ public class DynamicController {
 
                     }
                     map.put("comment",comment3);
-                    map2.put("comments"+j, map);
+                    map12.add( map);
                 }
-
+                map2.put("comments",map12);
                 map2.put("content", commenttwo);
                 comments1.add(map2);
             }
             map1.put("comments", comments1);
             map1.put("content", commentone);
-            mapp.put("info" + i, map1);
+            mapp.add( map1);
         }
         param.put("commentsAll", mapp);
         return param;
