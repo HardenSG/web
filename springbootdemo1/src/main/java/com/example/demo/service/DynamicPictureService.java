@@ -17,5 +17,6 @@ import java.util.List;
 @Repository
 public interface DynamicPictureService extends IService<DynamicPicture> {
     int insertDynamicPicture(DynamicPicture dynamicPicture);
+    //传入动态id后查到动态图片
     List queryPicure(int dId);
 }

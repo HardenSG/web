@@ -73,14 +73,24 @@ public interface DynamicService extends IService<Dynamic> {
      */
     List getDynamicByFollow(List<Follow> follows,Integer pageNumber);
     List<Integer> getDynamicIdByEmail(String email);
-    int noticeCount(String email);
+    List<Integer> getDynamicIdByEmailLike(String email);
+    List<Integer> getDynamicIdByEmailComment(String email);
+    List<Integer> getDynamicIdByEmailForward(String email);
 
-  Map commentNotice(HttpServletRequest request);
 
-  Map likeNotice(HttpServletRequest request);
+    List commentNotice(HttpServletRequest request);
+    List likeNotice(HttpServletRequest request);
 
-  Map forwardNotice(HttpServletRequest request);
+    List forwardNotice(HttpServletRequest request);
     List getMyDynamic(String email , int pageNumber);
+    //点赞数
+    int likeCount(String email);
+    //评论数
+    int commentCount(String email);
+    //转发数
+    int forwardCount(String email);
+
+
 }
 
 
