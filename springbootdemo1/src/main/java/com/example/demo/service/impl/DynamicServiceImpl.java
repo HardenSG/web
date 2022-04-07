@@ -5,21 +5,16 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.entity.*;
 import com.example.demo.mapper.*;
-import com.example.demo.service.CommentsService;
-import com.example.demo.service.DynamicService;
+import com.example.demo.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.demo.service.ForwardService;
-import com.example.demo.service.LikeService;
 import com.example.demo.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+
 /**
  * <p>
  *  服务实现类
@@ -41,14 +36,16 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
    private LikeMapper likeMapper;
    @Autowired
    private LikeService likeService;
-@Autowired
-private DynamicPictureMapper dynamicPictureMapper;
-@Autowired
-private CommentsService commentsService;
-@Autowired
-private ForwardMapper forwardMapper;
-@Autowired
-private ForwardService forwardService;
+    @Autowired
+    private DynamicPictureMapper dynamicPictureMapper;
+    @Autowired
+    private DynamicPictureService dynamicPictureService;
+    @Autowired
+    private CommentsService commentsService;
+    @Autowired
+    private ForwardMapper forwardMapper;
+    @Autowired
+    private ForwardService forwardService;
 
 
     /**
@@ -177,6 +174,45 @@ private ForwardService forwardService;
         return dynamicIds;
     }
 
+    @Override
+    public List<Integer> getDynamicIdByEmailLike(String email) {
+        QueryWrapper<Dynamic> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("email",email)
+                .gt("likes",0);
+        List<Dynamic> dynamics = dynamicMapper.selectList(queryWrapper);
+        List dynamicIds = new LinkedList();
+        for (Dynamic dynamic:dynamics) {
+            dynamicIds.add(dynamic.getDId());
+        }
+        return dynamicIds;
+    }
+
+    @Override
+    public List<Integer> getDynamicIdByEmailComment(String email) {
+        QueryWrapper<Dynamic> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("email",email)
+                .gt("comment_count",0);
+        List<Dynamic> dynamics = dynamicMapper.selectList(queryWrapper);
+        List dynamicIds = new LinkedList();
+        for (Dynamic dynamic:dynamics) {
+            dynamicIds.add(dynamic.getDId());
+        }
+        return dynamicIds;
+    }
+
+    @Override
+    public List<Integer> getDynamicIdByEmailForward(String email) {
+        QueryWrapper<Dynamic> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("email",email)
+                .gt("forward_count",0);
+        List<Dynamic> dynamics = dynamicMapper.selectList(queryWrapper);
+        List dynamicIds = new LinkedList();
+        for (Dynamic dynamic:dynamics) {
+            dynamicIds.add(dynamic.getDId());
+        }
+        return dynamicIds;
+    }
+
     public List getMyDynamic(String email , int pageNumber){
         Page<Dynamic> page = new Page<>(pageNumber,5);
         QueryWrapper<Dynamic> queryWrapper= new QueryWrapper<>();
@@ -186,34 +222,129 @@ private ForwardService forwardService;
         List<Dynamic> records = dynamicPage.getRecords();
         return records;
     }
-
+//点赞未读数
     @Override
-    public int noticeCount(String email) {
-        int notices = 0;
-        List<Integer> dIds = getDynamicIdByEmail(email);
+    public int likeCount(String email) {
+      int likeCount=0;
+      int total=0;
+        List<Integer> dIds = getDynamicIdByEmailLike(email);
+        for (int dId : dIds) {
+
+           likeCount = likeService.count(new QueryWrapper<Like>().eq("like_read",0)
+                                                                   .eq("d_id",dId)
+
+            );
+             total+=likeCount;
+        }
+        return total;
+    }
+//评论未读数
+    @Override
+    public int commentCount(String email) {
+        int commentCount = 0;
+        int total=0;
+        List<Integer> dIds = getDynamicIdByEmailComment(email);
         for (int dId : dIds) {
             QueryWrapper<Comments> queryWrapper = new QueryWrapper();
             queryWrapper.eq("comment_read",0)
                     .eq("d_id",dId);
-            Integer comment = commentsMapper.selectCount(queryWrapper);
-            QueryWrapper<Like> queryWrapper1= new QueryWrapper();
-            queryWrapper1.eq("like_read",0)
-                    .eq("d_id",dId);
-            Integer like = likeMapper.selectCount(queryWrapper1);
-            notices = notices+comment+like;
+             commentCount = commentsService.count(queryWrapper);
+            total+=commentCount;
         }
-        return notices;
+        return total;
     }
-    
+//转发未读数
+    @Override
+    public int forwardCount(String email) {
+        int forwardCount = 0;
+        int total=0;
+        List<Integer> dIds = getDynamicIdByEmailForward(email);
+        for (int dId : dIds) {
+            QueryWrapper<Forward> queryWrapper = new QueryWrapper();
+            queryWrapper.eq("forward_read",0)
+                    .eq("d_id",dId);
+            forwardCount = forwardService.count(queryWrapper);
+            total+=forwardCount;
+        }
+        return total;
+    }
+
+
+//    @Override
+//    public int noticeCount(String email) {
+//        int notices = 0;
+//        List<Integer> dIds = getDynamicIdByEmail(email);
+//        for (int dId : dIds) {
+//            QueryWrapper<Comments> queryWrapper = new QueryWrapper();
+//            queryWrapper.eq("comment_read",0)
+//                    .eq("d_id",dId);
+//            Integer comment = commentsMapper.selectCount(queryWrapper);
+//            QueryWrapper<Like> queryWrapper1= new QueryWrapper();
+//            queryWrapper1.eq("like_read",0)
+//                    .eq("d_id",dId);
+//            Integer like = likeMapper.selectCount(queryWrapper1);
+//            notices = notices+comment+like;
+//        }
+//        return notices;
+//    }
+//
 
 //评论通知
+//    @Override
+//    public Map commentNotice(HttpServletRequest request) {
+//        HashMap<Object, Object> param = new HashMap<>();
+//        //获取email
+//        String token = request.getHeader("token");
+//        String emailData = JwtUtils.parseEmail(token);
+//
+//        QueryWrapper<Dynamic> dynamicQueryWrapper = new QueryWrapper<>();
+//        dynamicQueryWrapper.eq("email", emailData)
+//                .gt("comment_count", 0);
+//        //动态记录合集
+//        List<Dynamic> data = dynamicMapper.selectList(dynamicQueryWrapper);
+//
+//        int j = 0;
+//        //通过动态表合集查到Comments里的符合条件的对象合集
+//        for (Dynamic did : data) {
+//            int i = 0;
+//            j++;
+//
+//            Map info = new HashMap();
+//            Integer dId = did.getDId();
+//            List<Comments> comment = commentsMapper.selectList(new QueryWrapper<Comments>().eq("d_id", dId)
+//                                               .orderByDesc("comment_date")
+//                                               .eq("comment_read", 0)
+//            );
+//            List picture=dynamicPictureService.queryPicure(dId);
+//            //把这个comment的Read值变成1
+//            commentsService.update(comment);
+//            //如果有未读的才把这条动态放进map
+//            if (comment.size() > 0) {
+//                info.put("dynamic", did);
+//                //通过评论表中的email查到user表中的head_picture
+//                for (Comments comm : comment) {
+//                    i++;
+//                    HashMap<Object, Object> peoplecomment = new HashMap<>();
+//                    peoplecomment.put("comment", comm);
+//                    String email = comm.getEmail();
+//                    List user = userMapper.selectList(new QueryWrapper<User>().eq("email", email));
+//                    peoplecomment.put("user", user);
+//                    info.put("peopleComment" + i, peoplecomment);
+//
+//                }
+//                param.put("info" + j, info);
+//            }
+//        }
+//
+//            return param;
+//        }
     @Override
-    public Map commentNotice(HttpServletRequest request) {
-        HashMap<Object, Object> param = new HashMap<>();
+    public List commentNotice(HttpServletRequest request) {
+        ArrayList<Object> param = new ArrayList<>();
         //获取email
         String token = request.getHeader("token");
         String emailData = JwtUtils.parseEmail(token);
-
+        User me=userMapper.getUserByEmail(emailData);
         QueryWrapper<Dynamic> dynamicQueryWrapper = new QueryWrapper<>();
         dynamicQueryWrapper.eq("email", emailData)
                 .gt("comment_count", 0);
@@ -226,42 +357,46 @@ private ForwardService forwardService;
             int i = 0;
             j++;
 
-            Map info = new HashMap();
+            List info = new ArrayList();
             Integer dId = did.getDId();
             List<Comments> comment = commentsMapper.selectList(new QueryWrapper<Comments>().eq("d_id", dId)
-                                               .orderByDesc("comment_date")
-                                               .eq("comment_read", 0)
+                    .orderByDesc("comment_date")
+                    .eq("comment_read", 0)
             );
+            List picture=dynamicPictureService.queryPicure(dId);
             //把这个comment的Read值变成1
             commentsService.update(comment);
             //如果有未读的才把这条动态放进map
             if (comment.size() > 0) {
-                info.put("dynamic", did);
+                info.add( did);
+                info.add(me);
+                info.add(picture);
                 //通过评论表中的email查到user表中的head_picture
                 for (Comments comm : comment) {
                     i++;
-                    HashMap<Object, Object> peoplecomment = new HashMap<>();
-                    peoplecomment.put("comment", comm);
+                    info.add(comm);
                     String email = comm.getEmail();
-                    List user = userMapper.selectList(new QueryWrapper<User>().eq("email", email));
-                    peoplecomment.put("user", user);
-                    info.put("peopleComment" + i, peoplecomment);
+                    User user = userMapper.selectOne(new QueryWrapper<User>().eq("email", email));
+                    info.add(user);
 
                 }
-                param.put("info" + j, info);
+
+                param.add(info);
             }
         }
 
-            return param;
-        }
+        return param;
+    }
 
 //点赞通知
     @Override
-    public Map likeNotice(HttpServletRequest request){
-        HashMap<Object, Object> param = new HashMap<>();
+    public List likeNotice(HttpServletRequest request){
+        ArrayList<Object> param = new ArrayList<>();
+
         //获取email
         String token=request.getHeader("token");
         String emailData= JwtUtils.parseEmail(token);
+        User me=userMapper.getUserByEmail(emailData);
         QueryWrapper<Dynamic> dynamicQueryWrapper = new QueryWrapper<>();
         dynamicQueryWrapper.eq("email", emailData)
                            .gt("likes",0);
@@ -274,45 +409,45 @@ private ForwardService forwardService;
         for ( Dynamic did:data) {
             int i = 0;
             j++;
-            Map info = new HashMap();
-            info.put("dynamic", did);
+            List info = new ArrayList();
+
             Integer dId = did.getDId();
             List <Like>comment = likeMapper.selectList(new QueryWrapper<Like>().eq("d_id", dId)
                     .orderByDesc("like_date")
                     .eq("like_read", 0)
 
             );
+            List picture=dynamicPictureService.queryPicure(dId);
             likeService.update(comment);
             //如果有未读的才把这条动态放进map
             if (comment.size() > 0) {
+                info.add( did);
+                info.add(me);
+                info.add(picture);
             //通过like表中的email查到user表中的head_picture
             for (Like comm : comment) {
                 i++;
-                HashMap<Object, Object> peoplecomment = new HashMap<>();
-                peoplecomment.put("like", comm);
+                info.add(comm);
                 String email = comm.getEmail();
-                List user = userMapper.selectList(new QueryWrapper<User>().eq("email", email));
-                peoplecomment.put("user", user);
-                info.put("peopleLike" + i, peoplecomment);
+                User user = userMapper.selectOne(new QueryWrapper<User>().eq("email", email));
+                info.add( user);
             }
-            param.put("info" + j, info);
+            param.add( info);
         }
         }
-
         return param;
-
     }
-
-
 
     //转发通知
     @Override
-    public Map forwardNotice(HttpServletRequest request) {
+    public List forwardNotice(HttpServletRequest request) {
 
-        HashMap<Object, Object> param = new HashMap<>();
+        ArrayList<Object> param = new ArrayList<>();
+
         //获取email
         String token=request.getHeader("token");
         String emailData= JwtUtils.parseEmail(token);
+        User me=userMapper.getUserByEmail(emailData);
         QueryWrapper<Dynamic> dynamicQueryWrapper = new QueryWrapper<>();
         dynamicQueryWrapper.eq("email", emailData)
                            .gt("forward_count",0);
@@ -326,25 +461,28 @@ private ForwardService forwardService;
         for ( Dynamic did:data) {
             int i = 0;
             j++;
-            Map info = new HashMap();
-            info.put("dynamic", did);
+            List info = new ArrayList();
+
             Integer dId = did.getDId();
             List<Forward> comment = forwardMapper.selectList(new QueryWrapper<Forward>().eq("d_id", dId)
                     .orderByDesc("forward_date")
             );
+            List picture=dynamicPictureService.queryPicure(dId);
             forwardService.update(comment);
             if (comment.size() > 0) {
+                info.add( did);
+                info.add(me);
+                info.add(picture);
                 //通过forward表中的email查到user表中的head_picture
                 for (Forward comm : comment) {
                     i++;
-                    HashMap<Object, Object> peoplecomment = new HashMap<>();
-                    peoplecomment.put("forward", comm);
+                    info.add(comm);
                     String email = comm.getEmail();
-                    List user = userMapper.selectList(new QueryWrapper<User>().eq("email", email));
-                    peoplecomment.put("user", user);
-                    info.put("peopleForward" + i, peoplecomment);
+                    User user = userMapper.selectOne(new QueryWrapper<User>().eq("email", email));
+
+                    info.add(user);
                 }
-                param.put("info" + j, info);
+                param.add( info);
             }
         }
 

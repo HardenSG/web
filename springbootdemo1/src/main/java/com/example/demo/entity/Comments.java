@@ -47,15 +47,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 
       private  int parentId;
 
+      private int parentTwoId;
+
     public Comments(){ }
 
-  public Comments(Integer dId, String email, String comment , Date commentDate,int replyId,int parentId) {
+  public Comments(Integer dId, String email, String comment , Date commentDate,int replyId,int parentId,int parentTwoId) {
     this.dId = dId;
     this.email = email;
     this.comment = comment;
     this.commentDate = commentDate;
     this.replyId=replyId;
     this.parentId=parentId;
+    this.parentTwoId=parentTwoId;
   }
 
 
