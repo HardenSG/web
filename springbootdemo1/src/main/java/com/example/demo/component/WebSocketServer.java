@@ -99,22 +99,20 @@ public class WebSocketServer {
 //    }
     //发给全部人消息
         @OnMessage
-    public void onMessage(String message, Session session, @PathParam("username") String username,@PathParam("email") String email ,boolean isAll) {
+    public void onMessage(String message, Session session, @PathParam("username") String username,@PathParam("email") String email ,@PathParam("headPicture")String headPicture,boolean isAll) {
         log.info("服务端收到用户username={}的消息:{}", username, message);
         JSONObject obj = JSONUtil.parseObj(message);
-
         String text = obj.getStr("text"); // 发送的消息文本  hello
         // {"to": "admin", "text": "聊天文本"}
-
             JSONObject result = new JSONObject();
             JSONArray array = new JSONArray();
             result.put("users", array);
-            for (Object key : sessionMap.keySet()) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("from", username);
                 jsonObject.put("text",text);
+                jsonObject.put("headpicture",headPicture);
                 array.add(jsonObject);
-            }
+
 //        {"users": [{"username": "zhang"},{ "username": "admin"}]}
             sendAllMessage(JSONUtil.toJsonStr(result));  // 后台发送消息给所有的客户端
     }
