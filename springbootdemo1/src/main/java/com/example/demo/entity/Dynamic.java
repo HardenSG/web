@@ -52,10 +52,10 @@ import lombok.EqualsAndHashCode;
     @TableField("forward_comment")
     private String forwardComment;
 
-  @TableField(exist=false)
+   @TableField(exist=false)
     private String topContent;
 
-    public Dynamic(){ }
+    public Dynamic(){}
 
     public Dynamic(String email , String conetent,  Date date ,Integer tId, String content){
       this.date = date;

@@ -213,7 +213,9 @@ public class DynamicController {
                        @RequestParam("dynamicUserEmail") String dynamicUserEmail,
                        HttpServletRequest request,
                        @RequestParam("commentIdP")int commentIdP,
-                       @RequestParam("commentIdR") int commentIdR
+                       @RequestParam("commentIdR") int commentIdR,
+                       @RequestParam("parentTwoId") int parentTwoId
+
     ){
 
         Map param = new HashMap();
@@ -229,7 +231,7 @@ public class DynamicController {
         //获得现在时间
         Date date = new Date(System.currentTimeMillis());
         //添加信息到comments表
-        Comments comments = new Comments(dId,email,comment,date,commentIdR,commentIdP);
+        Comments comments = new Comments(dId,email,comment,date,commentIdR,commentIdP,parentTwoId);
         int i = commentsService.insertComment(comments);
 
 
@@ -366,19 +368,19 @@ public class DynamicController {
 
     //评论通知
     @GetMapping("/dynamic/commentNotice")
-    public Map commentNotice(HttpServletRequest request){
+    public List commentNotice(HttpServletRequest request){
         return dynamicService.commentNotice(request);
     }
 
     //点赞通知
     @GetMapping("/dynamic/likeNotice")
-    public Map likeNotice(HttpServletRequest request) {
+    public List likeNotice(HttpServletRequest request) {
         return dynamicService.likeNotice(request);
     }
 
     //转发通知
     @GetMapping("/dynamic/forwardNotice")
-    public Map forwardNotice(HttpServletRequest request) {
+    public List forwardNotice(HttpServletRequest request) {
         return dynamicService.forwardNotice(request);
     }
     /**
@@ -409,10 +411,17 @@ public class DynamicController {
      * @return
      */
     @GetMapping("/notices")
-    public int returnNotice(HttpServletRequest request){
+    public Map returnNotice(HttpServletRequest request){
+        HashMap<Object, Object> param = new HashMap<>();
         //得到用户email
         String userEmail = JwtUtils.parseEmail(request.getHeader("token"));
-        return dynamicService.noticeCount(userEmail);
+        int likeCount=dynamicService.likeCount(userEmail);
+        int commentCount=dynamicService.commentCount(userEmail);
+        int forwardCount=dynamicService.forwardCount(userEmail);
+         param.put("likeCount",likeCount);
+         param.put("commentCount",commentCount);
+         param.put("forwardCount",forwardCount);
+        return param;
     }
 
 
