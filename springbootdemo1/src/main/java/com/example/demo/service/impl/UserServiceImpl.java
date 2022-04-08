@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
+import com.example.demo.service.FollowService;
 import com.example.demo.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.utils.JwtUtils;
@@ -32,6 +33,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
    private UserMapper usermapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private FollowService followService;
     @Override
     public User getUserByEmailAndPassword(String email,String password) {
 
@@ -96,7 +99,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     //通过email查询name,birthday,introduction,sex,head_picture
     public  Map selectByemail(String email) {
         HashMap<Object, Object> param = new HashMap<>();
-
+        //得到关注数
+        int follow=followService.follow(email);
+        //得到粉丝数
+        int fans=followService.fans(email);
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("email", email);
         List data = usermapper.selectList(userQueryWrapper);
@@ -104,11 +110,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             param.put("msg","此用户不存在");
 
         }else{
-
+            param.put("关注数",follow);
+            param.put("粉丝数",fans);
             param.put("status","200");
             param.put("msg","查询成功");
             param.put("List",data);
         }
         return param;
     }
+
+
 }

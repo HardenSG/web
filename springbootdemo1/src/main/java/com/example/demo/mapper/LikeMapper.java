@@ -1,8 +1,11 @@
 package com.example.demo.mapper;
 
+import com.example.demo.entity.Comments;
 import com.example.demo.entity.Like;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * <p>

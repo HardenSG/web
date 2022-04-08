@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.demo.entity.Follow;
+import com.example.demo.entity.Topic;
 
 import java.util.List;
 
@@ -19,4 +20,7 @@ public interface FollowService extends IService<Follow> {
     List getFollowByUserEmail(String userEmail);
     boolean isExist(Follow follow);
     int deleteFollow(Follow follow);
+    int follow(String email);
+    int fans(String email);
+    List getFollowByFollowedEmail(String followedEmail);
 }

@@ -64,13 +64,18 @@ public class FollowController {
             param.put("msg","您暂时无法关注");
             return param;
         }
-        int i = followService.insertFollow(userEmail,email);
-        if(i==1){
-            param.put("status",200);
-            param.put("msg","关注成功");
-        }else {
-            param.put("status",0);
-            param.put("msg","关注失败");
+        if(!followService.isExist(new Follow(userEmail,email))) {
+            int i = followService.insertFollow(userEmail, email);
+            if (i == 1) {
+                param.put("status", 200);
+                param.put("msg", "关注成功");
+            } else {
+                param.put("status", 0);
+                param.put("msg", "关注失败");
+            }
+        }else{
+            param.put("status","200");
+            param.put("msg","关注过了哦~");
         }
         return param;
     }

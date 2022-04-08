@@ -41,16 +41,23 @@ import org.springframework.format.annotation.DateTimeFormat;
       @TableId(value = "comment_id", type = IdType.AUTO)
       private Integer commentId;
 
-
       private int commentRead;
+
+      private int replyId;
+
+      private  int parentId;
+      private  int parentTwoId;
+
 
     public Comments(){ }
 
-  public Comments(Integer dId, String email, String comment , Date commentDate) {
+  public Comments(Integer dId, String email, String comment , Date commentDate,int replyId,int parentId) {
     this.dId = dId;
     this.email = email;
     this.comment = comment;
     this.commentDate = commentDate;
+    this.replyId=replyId;
+    this.parentId=parentId;
   }
 
 
