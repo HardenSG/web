@@ -3,8 +3,6 @@ package com.example.demo.component;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.example.demo.entity.User;
-import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserService;
 import com.example.demo.service.impl.UserServiceImpl;
 import org.slf4j.Logger;
@@ -24,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author websocket服务
  */
 @Controller
-@ServerEndpoint(value = "/imserver/{email}/{username}")
+@ServerEndpoint(value = "/imserver/{email}/{username}/{headPicture}")
 @Component
 public class WebSocketServer {
 
@@ -42,7 +40,7 @@ public class WebSocketServer {
     @Autowired
     UserService userService = new UserServiceImpl();
     @OnOpen
-    public void onOpen(Session session, @PathParam("email") String email, @PathParam("username") String username) {
+    public void onOpen(Session session, @PathParam("email") String email, @PathParam("username") String username ) {
 
         //map里面放用户
         sessionMap.put(email, session);
@@ -65,9 +63,9 @@ public class WebSocketServer {
      * 连接关闭调用的方法
      */
     @OnClose
-    public void onClose(Session session, @PathParam("username") String username) {
-        sessionMap.remove(username);
-        log.info("有一连接关闭，移除username={}的用户session, 当前在线人数为：{}", username, sessionMap.size());
+    public void onClose(Session session, @PathParam("email") String email) {
+        sessionMap.remove(email);
+        log.info("有一连接关闭，移除username={}的用户session, 当前在线人数为：{}", email, sessionMap.size());
     }
 
     /**
@@ -78,7 +76,7 @@ public class WebSocketServer {
      * @param message 客户端发送过来的消息
      */
     @OnMessage
-    public void onMessage(String message, Session session, @PathParam("username") String username,@PathParam("email") String email) {
+    public void onMessage(String message, Session session, @PathParam("username") String username,@PathParam("email") String email , boolean isAll) {
         log.info("服务端收到用户username={}的消息:{}", username, message);
         JSONObject obj = JSONUtil.parseObj(message);
         String toUsername = obj.getStr("to"); // to表示发送给哪个用户，比如 admin
