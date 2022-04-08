@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> implements DynamicService {
 
    @Autowired
-    private DynamicMapper dynamicMapper;
+   private DynamicMapper dynamicMapper;
    @Autowired
    private CommentsMapper commentsMapper;
    @Autowired

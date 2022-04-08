@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author websocket服务
  */
 @Controller
-@ServerEndpoint(value = "/imserver/{email}/{username}/{headPicture}")
+@ServerEndpoint(value = "/imserver/{email}/{username}")
 @Component
 public class WebSocketServer {
 
@@ -99,22 +100,44 @@ public class WebSocketServer {
 //    }
     //发给全部人消息
         @OnMessage
-    public void onMessage(String message, Session session, @PathParam("username") String username,@PathParam("email") String email ,@PathParam("headPicture")String headPicture,boolean isAll) {
-        log.info("服务端收到用户username={}的消息:{}", username, message);
-        JSONObject obj = JSONUtil.parseObj(message);
-        String text = obj.getStr("text"); // 发送的消息文本  hello
-        // {"to": "admin", "text": "聊天文本"}
+    public void onMessage(String message, Session session, @PathParam("username") String username,@PathParam("email") String email) {
+            log.info("服务端收到用户username={}的消息:{}", username, message);
+            JSONObject obj = JSONUtil.parseObj(message);
+            String type = obj.getStr("type");
+            String headPicture = obj.getStr("headPicture");
+            String text = obj.getStr("text"); // 发送的消息文本  hello
+            Date date = new Date(System.currentTimeMillis());
+            // {"to": "admin", "text": "聊天文本"}
             JSONObject result = new JSONObject();
             JSONArray array = new JSONArray();
-            result.put("users", array);
+            if(type.equals("1")){
+                String toUsername = obj.getStr("to"); // to表示发送给哪个用户，比如 admin
+                String toUserEmail = obj.getStr("toUserEmail"); // email表示被发送用户email
+                Session toSession = sessionMap.get(toUserEmail); // 根据 to用户名来获取 session，再通过session发送消息文本
+                if (toSession != null) {
+                // 服务器端 再把消息组装一下，组装后的消息包含发送人和发送的文本内容
+                    // {"from": "zhang", "text": "hello"}
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("from", username);  // from 是 zhang
+                    jsonObject.put("text", text);  // text 同上面的text
+                    jsonObject.put("date", date);  //时间
+                    jsonObject.put("email", email);
+                    jsonObject.put("headPicture", headPicture);
+                    this.sendMessage(jsonObject.toString(), toSession);
+                    log.info(jsonObject.toString());
+                    log.info("发送给用户userEmail={}，消息：{}", toUserEmail, jsonObject.toString());
+                } else {
+                    log.info("发送失败，未找到用户username={}的session", toUsername);
+                }
+            }else {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("from", username);
-                jsonObject.put("text",text);
-                jsonObject.put("headpicture",headPicture);
-                array.add(jsonObject);
-
-//        {"users": [{"username": "zhang"},{ "username": "admin"}]}
-            sendAllMessage(JSONUtil.toJsonStr(result));  // 后台发送消息给所有的客户端
+                jsonObject.put("date", date);
+                jsonObject.put("email", email);
+                jsonObject.put("text", text);
+                jsonObject.put("headpicture", headPicture);
+                sendAllMessage(jsonObject.toString());  // 后台发送消息给所有的客户端
+            }
     }
 
     @OnError
