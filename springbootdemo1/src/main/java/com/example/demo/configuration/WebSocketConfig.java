@@ -8,8 +8,8 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
  * @author Chu
  * @create 2022-04-01-15:28
  */
+@Configuration
 public class WebSocketConfig {
-    @Configuration
     public class WebsocketConfig {
 
         /**
