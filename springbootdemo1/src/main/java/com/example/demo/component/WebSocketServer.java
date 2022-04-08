@@ -113,7 +113,6 @@ public class WebSocketServer {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("from", username);
                 jsonObject.put("text",text);
-
                 array.add(jsonObject);
             }
 //        {"users": [{"username": "zhang"},{ "username": "admin"}]}
