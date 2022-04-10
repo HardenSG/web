@@ -86,6 +86,7 @@ public interface DynamicService extends IService<Dynamic> {
     int forwardCount(String email);
 
 
+    List getDynamicByTopic(List<Integer> tIds,int pageNumber);
 }
 
 

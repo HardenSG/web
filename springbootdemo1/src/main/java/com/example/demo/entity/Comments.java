@@ -49,7 +49,7 @@ import org.springframework.format.annotation.DateTimeFormat;
       private  int parentTwoId;
 
 
-      private int parentTwoId;
+
 
     public Comments(){ }
 

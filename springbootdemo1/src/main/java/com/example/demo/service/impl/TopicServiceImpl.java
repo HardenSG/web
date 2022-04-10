@@ -30,7 +30,6 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     @Autowired
     TopicMapper topicMapper;
     private static long time = 1000*60*60*24;
-
     /**
      * 根据话题内容模糊搜索话题，并且热度+1
      * @param content
@@ -59,7 +58,11 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
 
     }
 
-
+    /**
+     * 通过话题内容查找话题id
+     * @param content
+     * @return 话题id
+     */
     public Integer searchTopicIdNoHot(String content) {
         QueryWrapper<Topic> topicQueryWrapper = new QueryWrapper<>();
         topicQueryWrapper.eq("content",content);
@@ -77,7 +80,7 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     /**
      * 搜索话题
      * @param content
-     * @return
+     * @return 话题
      */
     public Topic searchTopic(String content) {
         QueryWrapper<Topic> topicQueryWrapper = new QueryWrapper<>();
@@ -86,6 +89,11 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         return topic;
     }
 
+    /**
+     * 模糊
+     * @param content
+     * @return
+     */
     @Override
     public List searchTopicList(String content) {
         QueryWrapper<Topic> topicQueryWrapper = new QueryWrapper<>();

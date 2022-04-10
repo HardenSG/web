@@ -167,6 +167,7 @@ public class UserController {
 
             }
             map.put("email",followedEmail);
+            map.put("name",userByEmail.getName());
             map.put("headPicture",headPicture);
             map.put("introduction",introduction);
             list.add(map);
@@ -191,6 +192,7 @@ public class UserController {
 
             }
             map.put("email",fansEmail);
+            map.put("name",userByEmail.getName());
             map.put("headPicture",headPicture);
             map.put("introduction",introduction);
             list.add(map);

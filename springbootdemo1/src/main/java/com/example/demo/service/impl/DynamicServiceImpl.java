@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> implements DynamicService {
 
    @Autowired
-    private DynamicMapper dynamicMapper;
+   private DynamicMapper dynamicMapper;
    @Autowired
    private CommentsMapper commentsMapper;
    @Autowired
@@ -156,6 +156,7 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
         queryWrapper.orderByDesc("date");
         for (Follow follow : follows) {
             queryWrapper.eq("email",follow.getFollowedEmail());
+            queryWrapper.or();
         }
         Page<Dynamic> dynamicPage = dynamicMapper.selectPage(page, queryWrapper);
         List<Dynamic> records = dynamicPage.getRecords();
