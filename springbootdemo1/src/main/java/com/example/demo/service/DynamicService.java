@@ -77,7 +77,7 @@ public interface DynamicService extends IService<Dynamic> {
 
     List forwardNotice(HttpServletRequest request);
     List getMyDynamic(String email , int pageNumber);
-    List getDynamicByTopic(List<Integer> tIds,int pageNumber);
+
     //点赞数
     int likeCount(String email);
     //评论数
