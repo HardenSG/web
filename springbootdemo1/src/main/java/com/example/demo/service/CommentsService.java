@@ -26,6 +26,12 @@ public interface CommentsService extends IService<Comments> {
     List<Comments> getCommentOne(int dId);
     List<Comments> getCommentTwo(int dId , int commentOneId);
     List<Comments> getCommentThree(int dId , int commentOneId , int commentTwoId);
+
+    /**
+     * 通过评论id获得此条评论
+     * @param cId
+     * @return
+     */
     Comments getCommentByCId(int cId);
 
 }

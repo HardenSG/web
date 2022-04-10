@@ -3,8 +3,10 @@ package com.example.demo.component;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import com.example.demo.service.impl.UserServiceImpl;
+import com.example.demo.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,7 @@ import org.springframework.stereotype.Controller;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -28,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketServer {
 
     private static final Logger log = LoggerFactory.getLogger(WebSocketServer.class);
+    private static final Map<String,String> users = new HashMap();
 
     /**
      * 记录当前在线连接数
@@ -43,17 +45,23 @@ public class WebSocketServer {
     @OnOpen
     public void onOpen(Session session, @PathParam("email") String email, @PathParam("username") String username ) {
 
+        users.put(email,username);
+        log.info(users.toString());
         //map里面放用户
         sessionMap.put(email, session);
         log.info("有新用户加入，username={}, 当前在线人数为：{}", username, sessionMap.size());
         JSONObject result = new JSONObject();
         JSONArray array = new JSONArray();
         result.put("users", array);
+        int i =0;
         for (Object key : sessionMap.keySet()) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("email", key);
             // {"username", "zhang", "username": "admin"}
-            jsonObject.put("username",username);
+            String name = users.get(key);
+            i++;
+            jsonObject.put("username", name);
+            log.info("=="+name);
             array.add(jsonObject);
         }
 //        {"users": [{"username": "zhang"},{ "username": "admin"}]}
@@ -107,6 +115,7 @@ public class WebSocketServer {
             String headPicture = obj.getStr("headPicture");
             String text = obj.getStr("text"); // 发送的消息文本  hello
             Date date = new Date(System.currentTimeMillis());
+            String s = DateUtils.parseDate(date);
             // {"to": "admin", "text": "聊天文本"}
             JSONObject result = new JSONObject();
             JSONArray array = new JSONArray();
@@ -120,7 +129,7 @@ public class WebSocketServer {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("from", username);  // from 是 zhang
                     jsonObject.put("text", text);  // text 同上面的text
-                    jsonObject.put("date", date);  //时间
+                    jsonObject.put("date", s);  //时间
                     jsonObject.put("email", email);
                     jsonObject.put("headPicture", headPicture);
                     this.sendMessage(jsonObject.toString(), toSession);
@@ -132,7 +141,7 @@ public class WebSocketServer {
             }else {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("from", username);
-                jsonObject.put("date", date);
+                jsonObject.put("date", s);
                 jsonObject.put("email", email);
                 jsonObject.put("text", text);
                 jsonObject.put("headpicture", headPicture);

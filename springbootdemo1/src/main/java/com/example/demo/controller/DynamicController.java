@@ -1,15 +1,10 @@
 package com.example.demo.controller;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.entity.*;
 import com.example.demo.service.*;
 import com.example.demo.utils.JwtUtils;
-import com.example.demo.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -43,12 +38,12 @@ public class DynamicController {
     ForwardService forwardService;
 
 
-
-
     /**
      * 添加动态
-     * @param request token->email
-     * @param message 动态内容
+     * @param request token-》email
+     * @param message 动态文字内容
+     * @param pictures 动态图片，以逗号分割的字符串
+     * @param topic 动态话题
      * @return
      */
     @PostMapping("/dynamic")
@@ -64,19 +59,15 @@ public class DynamicController {
         } catch (Exception e) {
 
         }
-
-        Integer tId = null;
-
         //email
         String token = request.getHeader("token");
         String email = JwtUtils.parseEmail(token);
-
-        //content
+        //动态文字内容
         String content = message;
-
-        //date
+        //动态日期
         Date date = new Date(System.currentTimeMillis());
         //topic不为null，则搜索topic表中是否已存在该话题
+        Integer tId = null;
         if(topic!=null){
              tId = topicService.searchTopicIdNoHot(topic);
             if(tId==null){
@@ -84,12 +75,12 @@ public class DynamicController {
                 try {
                     topicService.insertTopic(new Topic(topic, 0,picture[0],date));
                 }catch (Exception e){
+                    //若动态中没有图片 则添加默认图片为话题图片
                     topicService.insertTopic(new Topic(topic, 0,"82.157.48.184:8080/pictures/e9c2d6ab-6816-40b5-8954-06dcb0161877.jpg",date));
                 }
                 tId = topicService.searchTopicIdNoHot(topic);
             }
         }
-
         //放进一个dynamic对象里
         Dynamic dynamic = new Dynamic(email,content,date,tId,content);
         //进行添加
@@ -156,8 +147,8 @@ public class DynamicController {
 
     /**
      * 转发
-     * @param request
-     * @param dId
+     * @param request token->email
+     * @param dId 被转发的动态id
      * @param content
      * @return
      */
@@ -169,12 +160,16 @@ public class DynamicController {
         //获得被转发的动态
         Dynamic newDynamic = dynamicService.getDynamic(dId);
         List<String> list = dynamicPictureService.queryPicure(dId);
-        //被转发的动态成为新的动态,并添加
+        //被转发的动态成为新的动态,并将点赞数、评论数、转发数设为0
         newDynamic.setLikes(0);
         newDynamic.setCommentCount(0);
         newDynamic.setForwardCount(0);
         //两个属性表明此条动态为转发，原动态id为
-        newDynamic.setOriginalId(dId);
+        if(newDynamic.getOriginalId()==0){
+            //如果被转发的动态originalid为0，说明被转发动态为原创，则转发动态的orginalid就是原动态id，
+            // 否则说明被转发动态是转发的他人，那么设置为转发者直接转发原来动态
+            newDynamic.setOriginalId(dId);
+        }
         newDynamic.setForwardComment(content);
         newDynamic.setEmail(email);
         newDynamic.setDate(new Date(System.currentTimeMillis()));
@@ -188,6 +183,7 @@ public class DynamicController {
 
         if(i!=0){
             int newforwardCount = forwardCount+1;
+            //更新动态表中转发数
             int count = dynamicService.updateByColumn("forward_count", newforwardCount , dId);
             map.put("forwardCount",newforwardCount);
             map.put("status","200");
@@ -198,7 +194,6 @@ public class DynamicController {
         }
         return map;
     }
-
     /**
      * 评论
      * @param comment 评论内容
@@ -208,10 +203,10 @@ public class DynamicController {
      * @return
      */
     @PostMapping("/dynamic/comment")
-    public Map comment(@RequestParam("comment") String comment , @RequestParam("dId") int dId ,
+    public Map comment(HttpServletRequest request,
+                       @RequestParam("comment") String comment , @RequestParam("dId") int dId ,
                        @RequestParam("commentCount") int commentCount,
                        @RequestParam("dynamicUserEmail") String dynamicUserEmail,
-                       HttpServletRequest request,
                        @RequestParam("commentIdP")int commentIdP,
                        @RequestParam("commentIdR") int commentIdR,
                        @RequestParam("parentTwoId") int parentTwoId
@@ -233,8 +228,6 @@ public class DynamicController {
         //添加信息到comments表
         Comments comments = new Comments(dId,email,comment,date,commentIdR,commentIdP,parentTwoId);
         int i = commentsService.insertComment(comments);
-
-
         //获得当前用户的信息
         User userByEmail = userService.getUserByEmail(email);
         if(i!=0){
@@ -263,15 +256,21 @@ public class DynamicController {
      */
     @GetMapping("/dynamic")
     public Map dynamicList(@RequestParam("page") int pageNumber ){
-
         Map map = new HashMap();
         //得到五条dynamic记录
         List<Dynamic> list = dynamicService.pageList(pageNumber);
         showDynamic(list,map);
         return map;
     }
+
+    /**
+     * 显示动态
+     * @param list
+     * @param map
+     */
     public void showDynamic(List<Dynamic>list ,Map map){
         int i = 0;
+        //如果动态数量小于5说明后面么得动态了
         if(list.size()<5){
             map.put("message","已经到底啦！");
         }else {
@@ -293,7 +292,7 @@ public class DynamicController {
             if (dynamic.getOriginalId()==0){
                 //type:0 说明是原创
                 param.put("dynamicType","0");
-                //删除
+                //原动态被删除
             }else if (dynamic.getOriginalId()==-2){
                 param.put("dynamicType","-2");
                 //转发
@@ -405,7 +404,6 @@ public class DynamicController {
         }
         return map;
     }
-
     /**
      * 获得全部未读消息数
      * @return
@@ -425,11 +423,6 @@ public class DynamicController {
     }
 
 
-    @GetMapping
-    public Map getDynamicOne(){
-        Map map = new HashMap();
-        return map;
-    }
 
     /**
      * 所有评论
@@ -438,28 +431,62 @@ public class DynamicController {
      */
     @GetMapping ("/dynamic/comment")
     public Map getComments(@RequestParam("dId") int dId) {
-        Map mapp = new HashMap();
-        int i =0;
-        List<Comments> commentOnes = commentsService.getCommentOne(dId);
-        for(Comments commentone:commentOnes){
-            i++;
-            List<Comments> commentTwos = commentsService.getCommentTwo(dId, commentone.getCommentId());
+        Map param = new HashMap();
+        //放所有评论的数组
+        List mapp = new LinkedList();
+        //获得所有一级评论
+        List<Comments> commentones = commentsService.getCommentOne(dId);
+        //将一级评论数组做加工，添加进入用户信息
+        List<Comments> commentOnes = commentsService.getCommentsIncludeName(commentones);
+        for (Comments commentone : commentOnes) {
+            //查一级评论下的二级评论并加入用户信息
+            List<Comments> commenttwos = commentsService.getCommentTwo(dId, commentone.getCommentId());
+            List<Comments> commentTwos = commentsService.getCommentsIncludeName(commenttwos);
+            //放此条一级评论下的所有评论
             Map map1 = new HashMap();
+            //一级评论下的所有二级评论
             List comments1 = new LinkedList();
             for (Comments commenttwo : commentTwos) {
-
-                List<Comments> commentThree = commentsService.getCommentThree(dId, commentone.getCommentId(), commenttwo.getCommentId());
+                //放一条二级评论下的所有评论
                 Map map2 = new HashMap();
-                map2.put("comments",commentThree) ;
-                map2.put("content",commenttwo);
+                //二级评论下的所有三级评论
+                List map12 = new LinkedList();
+                //获得三级评论并处理
+                List<Comments> commentthree = commentsService.getCommentThree(dId, commentone.getCommentId(), commenttwo.getCommentId());
+                List<Comments> commentThree = commentsService.getCommentsIncludeName(commentthree);
+                for (Comments comment3:commentThree) {
+                    Map map = new HashMap();
+                    //获得被回复的那条三级评论的用户
+                    Comments commentByCId = commentsService.getCommentByCId(comment3.getReplyId());
+                    String email1 = null;
+                    try {
+                        //commentByCId不为空，则拿到被回复用户的信息，方便前端进行渲染
+                        email1 = commentByCId.getEmail();
+                        User userByEmail1 = userService.getUserByEmail(email1);
+                        map.put("user",userByEmail1);
+                    } catch (Exception e) {
+                        //若commentByCId为空，则说明是普通三级评论，不执行上面三条语句
+                    }
+                    map.put("comment",comment3);
+                    map12.add( map);
+                }
+                map2.put("comments",map12);
+                map2.put("content", commenttwo);
                 comments1.add(map2);
             }
-            map1.put("comments",comments1);
-            map1.put("content",commentone);
-            mapp.put("info"+i,map1);
+            map1.put("comments", comments1);
+            map1.put("content", commentone);
+            mapp.add( map1);
         }
-        return mapp;
+        param.put("commentsAll", mapp);
+        return param;
     }
+
+    /**
+     * 动态详情
+     * @param dId
+     * @return
+     */
     @GetMapping("dynamic/details")
     public  Map dynamciDetails(int dId) {
 
@@ -534,7 +561,12 @@ public class DynamicController {
         return param;
     }
 
-
+    /**
+     * 我的动态
+     * @param email
+     * @param pageNumber
+     * @return
+     */
     @GetMapping("dynamic/my")
     public Map myDynamic(String email , int pageNumber){
         Map map = new HashMap();
