@@ -215,25 +215,6 @@ export default {
                         this.$router.push({path:'/EditMessage'})
     
                     }
-                    else{
-
-                        this.$router.push({path:'/index'})
-                        // 获取消息通知数量
-                        axios({
-                            url:'http://82.157.48.184:5482/dynamic/likeNotice',
-                            method:'GET',
-                            headers:{
-                                token:this.$store.state.token
-                            }
-                        }).then(response=>{
-                            console.log(response.data);
-                            // 在这个地方存数量
-                            // 1
-                                // 2
-                                console.log(1111);
-                        })
-
-                    }
 
                 }else{
                     alert('登陆失败！')
