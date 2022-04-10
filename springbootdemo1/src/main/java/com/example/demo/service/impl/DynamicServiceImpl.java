@@ -399,6 +399,7 @@ public class DynamicServiceImpl extends ServiceImpl<DynamicMapper, Dynamic> impl
             Integer dId = did.getDId();
             List<Forward> comment = forwardMapper.selectList(new QueryWrapper<Forward>().eq("d_id", dId)
                     .orderByDesc("forward_date")
+                    .eq("forward_read", 0)
             );
             List picture=dynamicPictureService.queryPicure(dId);
             forwardService.update(comment);
