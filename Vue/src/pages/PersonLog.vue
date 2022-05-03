@@ -204,9 +204,9 @@ export default {
                         this.$store.commit('changeComment',response.data.评论未读数)
                     })
                     
-                    if(!window.Vue.$store.state.isComplete){
-                        this.$store.commit('changeComplete','no');
-                    }
+                    //if(!window.Vue.$store.state.isComplete){
+                        //this.$store.commit('changeComplete','no');
+                    //}
 
                     if (this.$store.state.isComplete == 'no') {
                         
@@ -214,7 +214,10 @@ export default {
                         
                         this.$router.push({path:'/EditMessage'})
     
-                    }
+                    }else{
+		    	this.$router.push({path:'/'})
+		    }
+		    
 
                 }else{
                     alert('登陆失败！')
